@@ -8,6 +8,7 @@ BINDIR = bin
 OUTFILE = ccc
 SOURCES = ccc.cpp compiler.cpp module.cpp bytechunk.cpp lexer.cpp parser.cpp ast.cpp \
           stringparser.cpp symboltable.cpp table.cpp value.cpp anchor.cpp
+LIBS = -lboost_system -lboost_filesystem
 OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 INSTALL_DIR = /usr/local
 
@@ -45,7 +46,7 @@ all: ccc tests runtests
 
 # Builds the compiler
 ccc: mkdirs libsdir $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(BINDIR)/$@
+	$(CXX) $(OBJECTS) $(LIBS) -o $(BINDIR)/$@
 
 
 # Ensure that bin and obj directories exist
