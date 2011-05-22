@@ -718,13 +718,14 @@ private:
 
 public:
 	CountExpr(int line, const std::string& id, int offset, int multiple, ErrorReceiver* e)
-		: Expression(line, e), id(id), offset(offset), multiple(multiple), set(false)
+		: Expression(line, e), id(id), offset(offset),
+          multiple(multiple), set(false), value()
 	{ }
 	// This overload is horrible.
 	// Oh well, so is this whole class; it's getting abandoned with
 	// the transition towards Banana.
 	CountExpr(int line, const std::string& id, int value, ErrorReceiver* e)
-		: Expression(line, e), id(id), value(value), set(true)
+		: Expression(line, e), id(id), set(true), value(value)
 	{ }
 	nodetype GetType() const { return countexpr; }
 
