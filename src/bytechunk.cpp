@@ -269,7 +269,7 @@ void ByteChunk::TranslateReferences(ByteChunk& destination,
 			// This means the reference is to a local anchor; we should
 			// translate and copy it if it's in range
 			Anchor* a = *found;
-			if(a->GetPosition() < (signed)start || a->GetPosition() > (signed)(start + len) 
+			if((a->GetPosition() < (signed)start || a->GetPosition() > (signed)(start + len))
 				&& !a->IsExternal())
 				throw Exception("substring operation truncated necessary anchor: " + a->GetName());
 
