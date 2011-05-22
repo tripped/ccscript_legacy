@@ -4,6 +4,7 @@
 /// "My string is: hoopy"
 /// "My number is: [2a 00 00 00]"
 /// "My flag is: [02 00]"
+/// "This is just a string: hello!"
 /// "Command result: mycmd(hoopy)"
 /// "0xAABBCCDD as a byte: [dd]"
 /// "0x11223344 as a short: [44 33]"
@@ -19,6 +20,8 @@ define myflag = flag 2
 "My number is: {mynumber}"
 "My flag is: {myflag}"
 
+// An escaped string inside a string expression
+"This is just a string: {\"hello!\"}"
 
 // Compose string with command
 command mycmd(arg) {
