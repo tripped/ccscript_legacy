@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<head>
+  <title>CCScript Tutorial</title>
+  <link rel="stylesheet" href="res/basic.css"/>
+  <script type="text/javascript" language="javascript">
+    function image_size(id, fullw)
+    {
+       var img = document.getElementById(id);
+
+       var dummy = new Image();
+       dummy.src = img.src;
+
+       if(img.width < dummy.width)
+       {
+          img.oldw = img.width;
+          img.width = dummy.width;
+
+       }
+       else
+       {
+          img.width = img.oldw;
+       }
+
+       return false;
+    }
+  </script>
+</head>
+
+<body>
+<h1>CCScript Tutorial</h1>
+
+<div class="toc">
+  Table of contents
+
+  <!-- only in XHTML/CSS will you see something useful and functional deprecated
+       in favor of a solution that quite simply does not work. -->
+  <ol start="0">
+    <li><a href="#0">Introduction</a>
+      <ol>
+        <li><a href="#0.1">Getting started</a></li>
+        <li><a href="#0.2">Creating a project</a></li>
+        <li><a href="#0.3">Compiling scripts</a></li>
+      </ol>
+    </li>
+
+    <li><a href="#1">The basics</a>
+      <ol>
+        <li><a href="#1.1">Text blocks and labels</a></li>
+        <li><a href="#1.2">Commands</a></li>
+        <li><a href="#1.3">Linking text to sprites</a></li>
+      </ol>
+    </li>
+
+    <li><a href="#2">More advanced techniques</a>
+      <ol>
+        <li><a href="#2.1">Events and conditional branching</a></li>
+        <li><a href="#2.2">Defining constants</a></li>
+        <li><a href="#2.3">Creating menus</a></li>
+        <li><a href="#2.4">Defining your own commands</a></li>
+        <li><a href="#2.5">Using multiple script files</a></li>
+      </ol>
+    </li>
+
+    <li><a href="#3">Conclusion</a>
+      <ol>
+        <li><a href="#3.1">Next steps</a></li>
+      </ol>
+    </li>
+  </ol>
+</div>
+
+
+<h2><a name="0">0. Introduction</a></h2>
+
+
+<h3><a name="0.1">0.1. Getting started</a></h3>
+
+<div class="section">
+   <p>
+   Getting started using CCScript is quick and easy. First, you'll need to download the CCScript
+   project editor, <a href="http://starmen.net/pkhack/ccscript">Visual CCScript</a>. Unzip it
+   somewhere convenient, open the folder, and run Visual CCS.exe. The first time you run it,
+   you'll see a window that looks like this:
+   </p>
+
+<div class="image">
+  <a href="#" onclick="image_size('quicksetup'); return false;">
+  <img id="quicksetup" src="res/visualccs_setup.png" width="50%" alt="The Visual CCS Setup Screen"/>
+  </a>
+  <div class="caption"><strong>Figure 1.</strong> The Visual CCScript setup screen.</div>
+</div>
+
+   <p>
+   Visual CCScript doesn't have a built-in text editor (yet), so for now you need to specify a
+   text editor you would like to use to edit script files. Visual CCS comes with a syntax highlighting
+   definition for <a href="http://textpad.com">Helios TextPad</a>, so it's recommended that you
+   use TextPad. If you don't already have TextPad, click the "Download TextPad" button in the Visual
+   CCS setup window, and it will take you to TextPad's download page.
+   </p>
+
+   <p>If you prefer to use a different text editor, just click the lower button. An options window
+   will appear, allowing you to choose a different program to use to edit script files. You won't
+   get automatic syntax highlighting with other editors, though, so unless you want to create your
+   own syntax highlighting definitions for your preferred text editor, we recommend that you just download
+   TextPad!</p>
+</div>
+
+<h3><a name="0.2">0.2. Creating a project</a></h3>
+
+<div class="section">
+   <p>
+   After setting up Visual CCScript with a text editor, the main window of Visual CCScript will appear.
+   To get started, first select "New Project" from the "File" menu. The "New Project" window will
+   then appear:
+   </p>
+
+	<div class="image">
+	  <a href="#" onclick="image_size('newproject'); return false;">
+	    <img id="newproject" src="res/visualccs_newproject.png" width="50%" alt="Creating a new project in Visual CCS"/>
+	  </a>
+	  <div class="caption"><strong>Figure 1.</strong> Creating a new project in Visual CCScript.</div>
+	</div>
+
+   <p>Here you need to choose two things: the name of your project, and the ROM file you want to edit.
+   Visual CCScript will automatically find a good place to dump compiled scripts into the ROM you select,
+   so in most cases you don't have to do anything to the "Select Location For Text Output" fields.</p>
+
+   <p>Once you've made your selections, hit "OK." A file for your project will be created in the same
+   directory as the ROM. Now the main screen of Visual CCScript should look like this:
+   </p>
+
+   	<div class="image">
+   	  <a href="#" onclick="image_size('main'); return false;">
+   	    <img id="main" src="res/visualccs_main.png" width="60%" alt="The main Visual CCS window"/>
+   	  </a>
+   	  <div class="caption"><strong>Figure 2.</strong> The main Visual CCScript window.</div>
+	</div>
+
+   <p>
+   The panel on the left side of the window lists all the script files that are part of your project.
+   When you first create a project, Visual CCScript also creates one script file, with the same name
+   as your project. Double-click the name of the file (or select it in the list by clicking once,
+   and then click the "Edit" button in the toolbar) to open it in a text editor.
+   </p>
+
+   <p>Go ahead and open the generated CCS file. It should look something like this:</p>
+
+   <code><span class="comment">/*
+ * Project:  AwesomeBound
+ * File:     awesomebound.ccs
+ * Author:   (Your name here!)
+ */</span></code>
+
+   <p>
+   This text is just a comment that Visual CCScript automatically adds to the files it creates.
+   In a CCScript file, any text between "/*" and "*/" is a comment - it doesn't <em>do</em> anything,
+   (the compiler completely ignores it)
+   but it's useful to be able to write descriptive notes to yourself or to others. This particular
+   note isn't important or anything; you can delete it if you want.
+   </p>
+
+   <p>So, that's all you need to do to set up a CCScript project!
+   When you want to return to an existing project at a later time, you can either start up CCScript again
+   and find your project file through the "File->Open" menu, or you can just go back to the folder that
+   contains your ROM file, and look for your project file there. It might look like this:
+
+	<div class="image">
+	  <a href="#" onclick="image_size('folder'); return false;">
+		<img id="folder" src="res/visualccs_folder.png" width="60%" alt=""/>
+	  </a>
+	  <div class="caption"><strong>Figure 3.</strong> CCScript project file.</div>
+	</div>
+   <p>
+   Just double-click your project file in Windows Explorer, and it will be opened in Visual CCScript
+   automatically, so you can jump right back into hacking!
+   </p>
+</div>
+
+<h3><a name="0.3">0.3. Compiling scripts</a></h3>
+
+<div class="section">
+   <p>
+   Once you have a project set up, clicking the "Compile" button will immediately compile all your script
+   files into EB text and control codes, and dump the result into your selected ROM. It's that easy!
+   As your project is compiling, messages will appear in the bottom of the Visual CCScript window.
+   If all goes well, the last line will read <code>"===== Compilation Succeeded! ====="</code> --
+   that means that your script has been successfully dumped into the ROM.
+   </p>
+
+   <p>
+   However, if there are any errors in your script, they will be listed, including the file and the line
+   number associated with each error. When there are errors, nothing gets written out: your ROM will
+   remain unchanged. You'll need to open up the files that contain the errors and correct them.
+   Generally speaking, the error message displayed in the bottom panel will explain what you did wrong.</p>
+
+   <p>Assuming everything works and compilation succeeds, you can then click the "Run Game" button to
+   begin playing your hack immediately! (Note: if you don't already have .SMC files set up in Windows
+   to automatically open in your preferred emulator, you'll need to go to Tools->Options and tell CCScript
+   what emulator you would like to use before this button will work.)</p>
+
+   <p class="warning">
+   Caution! Be careful if you have your ROM open in JHack while also compiling text with CCScript.
+   If you open your ROM in JHack and then compile your project, your compiled text will be reverted
+   if you then "Save" your ROM in JHack.<br/><br/>
+   You won't lose anything, because all your hard work is stored in your *.ccs files and <strong>not</strong> in the ROM,
+   but you <em>will</em> have to compile your project again in order to see your changes!<br/><br/>
+   So, for best results, always compile your project <em>after</em> saving in JHack.
+   </p>
+
+   <p>So, now that we've covered setting up and compiling a project, you're probably wondering how
+   to use CCScript to actually put stuff into a ROM. Read on to the next section and we'll get started!</p>
+</div>
+
+
+<h2><a name="1">1. The basics</a></h2>
+
+
+<h3><a name="1.1">1.1. Text blocks and labels</a></h3>
+
+<div class="section">
+
+<p>So, how do you put text into your hack with ccscript? Easy: just enclose it in
+quotation marks ("") and put it into a script file, like so:</p>
+
+<code><span class="string">"@Hello; I don't believe we've met before.[13 02]"</span>
+<span class="string">"@This bakery is kind of a lame place for a cool guy like me.[13 02]"</span>
+<span class="string">"@Pies are delicious.[03 00]"</span>
+<span class="string">"@Would you like to buy a pie?[13 02]"</span>
+</code>
+
+<p>The code above will write those four strings into the ROM, one after another. Note that
+<code>[02]</code> codes are still needed to separate them - the "Pies are delicious" string does
+not use <code>[02]</code> - instead it would just display a prompt and then continue to the next
+line, "Would you like to buy a pie?" Pretty neat, huh? However, just a handful of text strings aren't
+very useful. We need to be able to refer to the text somehow, so sprites and other text blocks
+can link to it, right?</p>
+
+<p>
+In the old text system, we did this with pointers. For example, we'd have a text block
+in the expanded area of the text editor, with an address like <code>$F021CB</code>, and to reference it
+in another text block, we'd have to flip all the bytes around and use a control code like
+<code>[08 CB 21 F0 00]</code>. And we'd have to do that <em>every</em> time we wanted to link
+text together. The more text we added to the ROM, the more painful it was to manage all the
+addresses, especially if you had links into the middle of text blocks where the address might
+change when you edit the text.
+</p>
+
+<p>Fortunately, CCScript makes all this easy. Instead of pointers, we use <em>labels</em>. A
+label allows you to give a "name" to a point within your text. You can then use that name to
+refer to that location, instead of worrying about the exact address.</p>
+
+<p>To create a label, all you have to do is write a name followed by a colon (:). Label names
+are allowed to contain letters, numbers, and underscores. (Also, a label name can't begin with a
+number.) Here's an example of using labels:</p>
+
+<code>introduction:
+   <span class="string">"@Hello; I don't believe we've met before.[13 02]"</span>
+frank:
+   <span class="string">"@This bakery is kind of a lame place for a cool guy like me.[13 02]"</span>
+pie:
+   <span class="string">"@Pies are delicious.[03 00]"</span>
+   <span class="string">"@Would you like to buy a pie?[13 02]"</span></code>
+
+<p>Now we've created three labels in our text. Labels can be created just about anywhere, and
+there's no need to create a label for every string. The line breaks and indentation are optional,
+but they make things easier to read, so it's a good idea to use them. :-)</p>
+
+<p>So, now that we have some labels, how do we actually use them? We'll find out in the next
+section!</p>
+
+</div>
+
+
+
+<h3><a name="1.2">1.2. Commands</a></h3>
+
+<div class="section">
+
+<p>In CCScript, <em>commands</em> are basically an easier way to use control codes. Instead of
+using a sequence of code bytes like <code>[1F 23 42 00]</code>, you can use a simple, easy-to-remember
+command like <code><span class="keyword1">battle</span>(<span class="num">0x42</span>)</code>.
+If a command takes parameters, you put them after the command
+name and inside parentheses. (In the last example, 0x42 is a parameter. In this case,
+it's how you specify which battle entry should be used.)
+If a command takes more than one parameter, you separate them with commas.
+If a command doesn't take any parameters, you don't need any parentheses.</p>
+
+<h4>A few built-in commands</h4>
+
+<p>There are a lot of commands we can use -- EB has a lot of control codes, after all. There is a full
+list of built-in commands in the <a href="Reference.html">Library documentation</a>, but for convenience,
+here is a list of a few of the most commonly used commands:</p>
+
+
+<ul>
+<li><code><span class="keyword1">next</span>            </code> - shows a blinking prompt, then a linebreak. Equivalent to <code>[03 00]</code></li>
+<li><code><span class="keyword1">end</span>             </code> - waits for input and ends text parsing; equivalent to <code>[13 02]</code></li>
+<li><code><span class="keyword1">set</span>(flag)       </code> - sets an event flag</li>
+<li><code><span class="keyword1">unset</span>(flag)     </code> - clears an event flag</li>
+<li><code><span class="keyword1">call</span>(label)     </code> - jumps to the specified <code>label</code> and returns when done parsing</li>
+<li><code><span class="keyword1">goto</span>(label)     </code> - jumps to the specified <code>label</code> and does not return</li>
+<li><code><span class="keyword1">give</span>(char, item)</code> - puts <code>item</code> into <code>char</code>'s inventory.</li>
+<li><code><span class="keyword1">name</span>(char)      </code> - displays the name of the given character</li>
+<li><code><span class="keyword1">sound</span>(num)      </code> - plays a sound effect</li>
+</ul>
+
+<p>
+Note the <code><span class="keyword1">goto</span></code> and <code><span class="keyword1">call</span></code>
+commands - these are one way we can make use of
+the text labels we created in the previous section. Suppose we wanted the first text block to
+include a link to the last one? (Perhaps the person saying "Hello" is the baker.) All we have to
+do is use a <code>goto</code> command, like so:
+</p>
+
+<code>introduction:
+   <span class="string">"@Hello; I don't believe we've met before."</span> <span class="keyword1">next</span>
+   <span class="keyword1">goto</span>(pie)
+frank:
+   <span class="string">"@This bakery is kind of a lame place for a cool guy like me."</span>
+   <span class="keyword1">end</span>
+pie:
+   <span class="string">"@Pies are delicious."</span> <span class="keyword1">next</span>
+   <span class="string">"@Would you like to buy a pie?"</span>
+   <span class="keyword1">end</span></code>
+
+<p>
+Note that we also replaced <code>[13 02]</code> and <code>[03 00]</code> with their equivalent commands.
+Looks much neater now, doesn't it?
+</p>
+
+<h4>Embedding commands inside strings</h4>
+<p>You can also embed commands directly into text strings by surrounding them with curly braces, like this:</p>
+
+<code>   <span class="string">"@(<span class="keyword1">{name(1)}</span> got the <span class="keyword1">{itemname(42)}</span>.)"</span>
+</code>
+
+<p>You can get the same result by doing something like this:</p>
+
+<code>   <span class="string">"@("</span> <span class="keyword1">name</span>(1) <span class="string">" got the "</span> <span class="keyword1">itemname</span>(42) <span class="string">".)"</code>
+
+<p>Both forms give the same results, but in some cases using the curly braces will be tidier. It's
+purely a matter of style which one you choose, and you can mix and match the different formats as well.</p>
+
+</div>
+
+
+<h3><a name="1.3" >1.3. Linking text to sprites</a></h3>
+
+<div class="section">
+
+<p>So, now we have a few text strings that will be compiled into the ROM. We know how to link text
+blocks together, but that's not very useful by itself. How can we make sprites in the game actually
+use the text we create?</p>
+
+<p>In CCScript, all we have to do is use the <code><span class="keyword1">sprite_link</span></code>
+command, which will wire up a given TPT entry in the ROM to a label in our script. To use
+<code><span class="keyword1">sprite_link</span></code>, all we need to know is the TPT number
+we want to use. This is easy enough to find in PK Hack's map editor:
+just right-click the sprite, and its TPT number will be listed in hexadecimal on the popup menu.</p>
+
+<div class="image">
+  <img src="res/img_tptnumber.png" alt="Finding TPT numbers in the map editor"/>
+  <div class="caption"><strong>Figure 1.</strong> Right-click a sprite in the map editor to find its TPT number</div>
+</div>
+
+<p>In Figure 1, we can see that the baker's sprite is TPT entry number 0x28. So, if we wanted to
+make it so that the baker uses the text that we've labeled "some_text", all we have to do is add
+the command <code><span class="keyword1">sprite_link</span>(<span class="num">0x28</span>, introduction)</code>
+to our script! The TPT number for Frank's sprite is 0x92, so we can link both of these sprites
+to the appropriate text like so:</p>
+
+<code><span class="keyword1">sprite_link</span>(<span class="num">0x28</span>, introduction)
+<span class="keyword1">sprite_link</span>(<span class="num">0x92</span>, frank)
+
+introduction:
+   <span class="string">"@Hello; I don't believe we've met before."</span> <span class="keyword1">next</span>
+   <span class="keyword1">goto</span>(pie)
+frank:
+   <span class="string">"@This bakery is kind of a lame place for a cool guy like me."</span>
+   <span class="keyword1">end</span>
+pie:
+   <span class="string">"@Pies are delicious."</span> <span class="keyword1">next</span>
+   <span class="string">"@Would you like to buy a pie?"</span>
+   <span class="keyword1">end</span></code>
+
+<p>
+So that's all it takes to create a handful of text strings, link them up, and use them in the game!
+
+</p>
+</div>
+
+
+
+<h2><a name="2">2. Advanced techniques</a></h2>
+
+
+<h3><a name="2.1">2.1. Events and conditional branching</a></h3>
+
+<div class="section">
+
+<p>
+Now that we've covered the basic method for outputting text strings, creating labels, and linking
+them to in-game sprites, we can dive right into using CCScript for more advanced levels of control,
+like event flags and conditional branching. Fortunately, CCScript makes these tasks easy as well.
+</p>
+
+<p>
+Take our previous example. As it is, every time you talk to the baker, he will begin by saying
+"Hello; I don't believe we've met before." He seems to have a terrible short-term memory problem.
+Suppose we want to fix this by making him only say that introductory line once, thereafter greeting
+the player in a more familiar way. To do this, we would use an <em>event flag</em>, together with
+an <code><span class="keyword0">if</span></code> statement. An <code><span class="keyword0">if</span></code>
+statement looks like this:
+</p>
+
+<code><span class="keyword0">if</span> condition
+{
+   <span class="comment">// Code in here is reached only if the condition is met</span>
+}</code>
+
+<p>Most of the time, you'll want to use an event flag as the condition. To use an event flag in
+code, use the <code><span class="keyword0">flag</span></code> keyword, followed by the flag number.
+For example, <code><span class="keyword0">flag</span> <span class="num">24</span></code>, or
+<code><span class="keyword0">flag</span> <span class="num">0x192</span></code>.
+</p>
+
+<p>
+It is also possible to control an <code><span class="keyword0">if</span></code> statement based
+on multiple conditions, by combining them together using the keywords
+<code><span class="keyword0">and</span></code>,
+<code><span class="keyword0">or</span></code>, and
+<code><span class="keyword0">not</span></code>.
+These keywords do exactly as their names suggest:
+<code><span class="keyword0">flag</span> <span class="num">120</span> <span class="keyword0">and flag</span> <span class="num">42</span></code>
+is true only if <strong>both</strong> flags 120 and 42 are set. Similarly,
+<code><span class="keyword0">flag</span> <span class="num">64</span> <span class="keyword0">or not flag</span> <span class="num">2</span></code>
+can be true if flag 64 is set, or if flag 2 is <strong>not</strong> set, or both.
+In this way it is possible to code complex sets of goals with relative ease.</p>
+
+<p>For more detailed information about how this works, see <a href="ccscript.html#2.4.3">Boolean Operators</a>
+in the CCScript Reference.</p>
+
+<p>You can also add an
+<code><span class="keyword0">else</span></code> block to an <code><span class="keyword0">if</span></code>
+statement, which lets you specify code that will be used if the condition is false:
+</p>
+
+<code><span class="keyword0">if flag</span> <span class="num">120</span> {
+   <span class="string">"@Whoa! The flag is set!"</span>
+}
+<span class="keyword0">else</span> {
+   <span class="string">"@Ho-hum. The flag is not set."</span>
+}</code>
+
+<p>Now, let's get back to our forgetful baker. All we have to do to give him a memory is
+decide on an event flag that we'll use, and then add an <code><span class="keyword0">if</span></code>
+statement to his text. Here is the updated script file, complete with event flag usage and conditional
+branching:</p>
+
+
+<code><span class="keyword1">sprite_link</span>(<span class="num">0x28</span>, introduction)
+<span class="keyword1">sprite_link</span>(<span class="num">0x92</span>, frank)
+
+introduction:
+   <span class="keyword0">if not flag</span> <span class="num">120</span> {
+      <span class="string">"@Hello; I don't believe we've met before."</span>
+      <span class="keyword1">set</span>(<span class="keyword0">flag</span> <span class="num">120</span>)
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Welcome back, loyal customer!"</span>
+   }
+   <span class="keyword1">next</span>
+   <span class="keyword1">goto</span>(pie)
+
+frank:
+   <span class="string">"@This bakery is kind of a lame place for a cool guy like me."</span>
+   <span class="keyword1">end</span>
+
+pie:
+   <span class="string">"@Pies are delicious."</span> <span class="keyword1">next</span>
+   <span class="string">"@Would you like to buy a pie?"</span>
+   <span class="keyword1">end</span></code>
+
+</div>
+
+
+
+<h3><a name="2.2">2.2. Defining constants</a></h3>
+
+<div class="section">
+
+<p>Often when writing scripts, you'll notice that there are some values (numbers, or names, or
+event flags, etc.) that you use a whole lot. For example, you might use event flag 120 in
+many different places - some checking it, some setting it or turning it off. Well, suppose that
+later you decided to use a different event flag for all those things. Normally, you'd have to
+go hunting through your code, looking for every place where you used flag 120.</p>
+
+<p>That's where constant definitions come in. Instead of just using the same value over and over
+again, you can give it a name, and then use the name throughout your project. Here's an example
+of how we might use it in our bakery script:</p>
+
+<code><span class="keyword0">define</span> met_baker = <span class="keyword0">flag</span> <span class="num">120</span>
+
+introduction:
+   <span class="keyword0">if</span> <span class="keyword0">not</span> met_baker {
+      <span class="string">"@Hello; I don't believe we've met before."</span>
+      <span class="keyword1">set</span>(met_baker)
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Welcome back, loyal customer!"</span>
+   }</code>
+
+<p>So, instead of using <code><span class="keyword0">flag</span> <span class="num">120</span></code>
+all over the place, we can just use the symbol <code>met_baker</code>, which in addition to making
+the code easier to change later, has the added benefit of making it much more obvious what our
+code is doing. Instead of just seeing "do this if flag 120 is not set," we can immediately tell
+that this block of code is depending on whether or not the player has previously met the baker NPC.</p>
+
+<p>You can also define constants for things besides event flags. Strings, numbers, commands --
+any expression can be given a name and used as a constant. Here are a few more examples:</p>
+
+<code><span class="keyword0">define</span> boss_name = <span class="string">"Master Puke"</span>
+<span class="keyword0">define</span> ness = <span class="keyword1">name</span>(<span clas="num">1</span>)
+<span class="keyword0">define</span> paula = <span class="keyword1">name</span>(<span clas="num">2</span>)
+<span class="keyword0">define</span> spatula_price = <span class="num">1526</span></code>
+
+</div>
+
+
+<h3><a name="2.3">2.3. Creating menus</a></h3>
+
+<div class="section">
+
+<p>Menus are one of the trickier topics in control code usage; but like just about everything
+else, CCScript makes menu construction trivially easy. A <code><span class="keyword0">menu</span></code>
+statement in CCScript looks like this:</p>
+
+<code><span class="keyword0">menu</span> {
+   <span class="string">"Option1"</span>: {
+      <span class="comment">// Stuff to do if first option is chosen...</span>
+   }
+   <span class="string">"Option2"</span>: {
+      <span class="comment">// Stuff to do if second option is chosen...</span>
+   }
+   <span class="keyword0">default</span> <span class="string">"Option3"</span>: {
+      <span class="comment">// Stuff to do if third option is chosen...</span>
+   }
+   <span class="comment">// ...and so on</span>
+}</code>
+
+<p>The <code><span class="keyword0">default</span></code> keyword marks which option should be
+the "default" option -- that is, the option that is chosen if the player presses "B" instead of
+choosing one of the options. In EarthBound's Yes/No menus, "No" was usually the default option.
+If you leave out the <code><span class="keyword0">default</span></code> keyword, none of the
+options will be chosen if the player presses "B"; the code will simply skip to whatever comes
+after the <code><span class="keyword0">menu</span></code> statement.</p>
+
+<p>So, let's return to our bakery example. The baker asks the player if they would like to purchase
+a pie, so let's go ahead and add a menu there:</p>
+
+<code><span class="keyword0">define</span> met_baker = <span class="keyword0">flag</span> <span class="num">120</span>
+
+<span class="keyword1">sprite_link</span>(<span class="num">0x28</span>, introduction)
+<span class="keyword1">sprite_link</span>(<span class="num">0x92</span>, frank)
+
+introduction:
+   <span class="keyword0">if not</span> met_baker {
+      <span class="string">"@Hello; I don't believe we've met before."</span>
+      <span class="keyword1">set</span>(met_baker)
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Welcome back, loyal customer!"</span>
+   }
+   <span class="keyword1">next</span>
+   <span class="keyword1">goto</span>(pie)
+
+frank:
+   <span class="string">"@This bakery is kind of a lame place for a cool guy like me."</span>
+   <span class="keyword1">end</span>
+
+pie:
+   <span class="string">"@Pies are delicious."</span> <span class="keyword1">next</span>
+   <span class="string">"@Would you like to buy a pie?"</span> <span class="keyword1">next</span>
+   <span class="keyword0">menu</span> {
+      <span class="string">"Hell yes!"</span>: {
+         <span class="string">"@Wonderful! That will be four thousand dollars."</span>
+      }
+      <span class="keyword0">default</span> <span class="string">"No way!"</span>: {
+         <span class="string">"@Oh, I see..."</span> <span class="keyword1">next</span>
+         <span class="string">"@Well, please come again!"</span>
+      }
+   }
+   <span class="keyword1">end</span></code>
+
+<p>And that's all there is to it! As an added touch, if we wanted to actually give the player
+a chance to purchase an outrageously expensive pie, we could add some more code inside the
+"Hell yes!" menu option, using all the other stuff we've learned so far in this tutorial:</p>
+
+<code>         <span class="keyword0">if</span> <span class="keyword1">has_money</span>(<span class="num">4000</span>) {
+            <span class="keyword1">take_money</span>(<span class="num">4000</span>)
+            <span class="keyword1">give</span>(<span class="num">1</span>, <span class="num">25</span>)
+            <span class="string">"@({name(1)} got the pie.)"</span> <span class="keyword1">next</span>
+         }
+         <span class="keyword0">else</span> {
+            <span class="string">"@Um."</span> <span class="keyword1">next</span>
+            <span class="string">"@You do not have 4000 dollars."</span> <span class="keyword1">next</span>
+         }</code>
+</div>
+
+
+
+<h3><a name="2.4">2.4. Defining your own commands</a></h3>
+
+<div class="section">
+
+<p>In addition to the built-in commands (<code><span class="keyword1">next</span></code>,
+<code><span class="keyword1">goto</span></code>, <code><span class="keyword1">name</span></code>
+and so on), it is possible to define your own commands. A command definition looks like this:</p>
+
+<code><span class="keyword0">command</span> mycmd(param1, param2, param3)
+{
+   <span class="comment">// Stuff the command should do goes here</span>
+}</code>
+
+<p>Custom commands are extremely useful when you find yourself repeating the same chunk of code
+or text over and over again. Instead of repeating yourself all the time, why not just make that
+commonly-used code into a <code><span class="keyword0">command</span></code>, and then just use
+the command instead of copying and pasting a huge chunk of code?</p>
+
+<p>For example, think about what happens when you get an item in EarthBound. The item is put
+into your inventory, a happy little sound effect plays, and a message like "@(Ness got the
+Key to the shack.)" is displayed. So, in our own script, whenever we want to give the player
+an item, we <em>could</em> just repeat the code for all three actions. Or we could simply
+define a command that does them all in one neat little package:</p>
+
+<code><span class="keyword0">command</span> get_item(x)
+{
+   <span class="keyword1">give</span>(1, x)
+   <span class="keyword1">sound</span>(SPECIAL_ITEM)
+   <span class="string">"@({name(1)} got the {itemname(x)}.)"</span>
+   <span class="keyword1">next</span>
+}</code>
+
+<p>Note how we used the built-in <code><span class="keyword1">itemname</span></code> command to
+display the name of the item. Once this command is defined, all we have to do is use it, like this:
+</p>
+
+<code><span class="string">"@I'm going to give you a hamburger."</span> <span class="keyword1">next</span>
+get_item(<span class="num">0x5A</span>)</code>
+
+<p>See how much cleaner that is? And since giving the player an item is a pretty common event, by
+packaging the details into a single command, we've just saved ourselves a lot of work.</p>
+
+</div>
+
+
+
+<h3><a name="2.5">2.5. Using multiple script files</a></h3>
+
+<div class="section">
+
+<p>So, now that we've figured out how to do all this cool stuff, you probably want to get started
+using it on a full-scale hacking project. But if you think about it, a game's entire script can
+get pretty huge, and dealing with such a tremendous amount of text in one file would be pretty intimidating.
+Imagine how much scrolling you'd have to do just to find one little line of NPC dialogue somewhere
+in the last half of the game!</p>
+
+<p>Well, to be honest, you couldn't have one CCSCript file that big anyway, since in the current version of the compiler,
+CCScript modules cannot have a compiled size any larger than 64KB. But the technological limit aside,
+it would be really great to be able to break up a hack into multiple script files, so each one would
+be a lot smaller and easier to organize.</p>
+
+<p>Fortunately, CCScript makes this easy. In the main CCScript window, look for the "Add" button
+in the toolbar above the file list:</p>
+
+	<div class="image">
+	    <img id="add" src="res/visualccs_add.png" alt="Adding a file in Visual CCS"/>
+	  <div class="caption"><strong>Figure 1.</strong> Adding a file in Visual CCScript.</div>
+	</div>
+
+<p>When you click the Add button, you'll be asked to enter a name for the new file. Once you do,
+the file will be created and added to your project. Then you can open it up, add code to it, save
+it, and so on, and when you click "Compile," it will be compiled and dumped into your ROM along
+with the other files in your project.</p>
+
+<p>When working with multiple CCScript modules, it's a good idea to create a new module at least for every
+major area in your hack. For example, you could have one module for each town, with a few extra modules
+for the larger dungeons or other such things. This keeps your project nice and organized, and makes it easier
+to update your NPC scripts, add areas, or make other changes.</p>
+
+<p>Now, being able to split your hack into multiple files is all well and good, but how can we link things
+in different files together? For example, suppose you're working on bakery.ccs, and you want to jump to
+some text that's in onett.ccs, or use a command that you defined in usefulcommands.ccs?</p>
+
+<p>That's easy too: you can do it almost just like you were using a symbol defined in the current file,
+but the only difference is that you have to add the name of the module you want to refer to, followed
+by a period, to the beginning. For example, <code><span class="keyword1">goto</span>(onett.sometext)</code>
+or <code>usefulcommands.dostuff()</code>. The name of the module is just the name of the CCScript file,
+without the ".ccs" extension.</p>
+
+<p>Here's a very simple example of two modules, onett.ccs and twoson.ccs, in which onett.ccs refers
+to a symbol defined in twoson.ccs:</p>
+
+<code><span class="comment">// This is onett.ccs</span>
+
+sometext:
+   <span class="string">"@Hello from Onett!"</span> <span class="keyword1">next</span>
+   <span class="keyword0">if</span> twoson.onfire {
+      <span class="string">"@Somebody told me that Twoson is on fire for some reason."</span>
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@So hey, Twoson is totally not on fire or anything. Cool beans."</span>
+   }
+   <span class="keyword1">end</span></code>
+
+<code><span class="comment">// This is twoson.ccs</span>
+
+<span class="keyword0">define</span> onfire = <span class="keyword0">flag</span> <span class="num">351</span>
+
+matches:
+   <span class="string">"@({name(1)} found some matches on the ground.)"</span> <span class="keyword1">next</span>
+   <span class="string">"@Yay, matches!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">set</span>(onfire)
+   <span class="string">"@(Oh crap! Twoson is on fire now.)"</span> <span class="keyword1">end</span></code>
+
+<p>For more information about this topic, see <a href="CCScript.html#1.3">Modules and Scopes</a> in
+the CCScript language reference.</p>
+</div>
+
+<h2><a name="3">3. Conclusion</a></h2>
+
+<div class="section">
+   <p>So, hopefully by the end of this tutorial you have a better idea of exactly how powerful
+   CCScript is, and how to use it to create your own hacks. If you're still a little unclear on
+   some things, one of the best ways to learn is to just try stuff out! Look at the examples
+   given in this tutorial and try to expand on them. Also, try reading the
+   <a href="ccscript.html">CCScript Language Reference</a> once you get a little more comfortable;
+   it's a more thorough description of the CCScript language, and it has plenty of additional
+   examples as well.</p>
+
+   <p>You can also drop by the <a href="http://forum.starmen.net/forum/Community/PKHack/pkhax-What-it-is-Why-it-is-there-and-Why-Care/first">
+  #pkhax channel</a> on DynastyNet (irc.dynastynet.net) if you have further questions, or look
+  for the CCScript thread on the <a href="http://forum.starmen.net/forum/Community/PKHack/">PK Hack forum</a>.</p>
+
+  <p>Have fun, and happy hacking!</p>
+</div>
+
+</body>
+
+</html>

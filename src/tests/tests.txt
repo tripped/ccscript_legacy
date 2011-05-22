@@ -1,0 +1,38 @@
+// Standard CCScript 1.0 tests
+blank.ccs
+text.ccs
+number.ccs
+labels.ccs
+defines.ccs
+flagexpr.ccs
+booleanexpr.ccs
+boundedexpr.ccs
+stringexpr.ccs
+conditionals.ccs
+menus.ccs
+commands.ccs
+lazyeval.ccs
+romwrite.ccs
+
+// CCScript 1.3 language feature tests
+cmdlabels.ccs
+scopes.ccs
+ifexpr.ccs
+menuexpr.ccs
+counters.ccs
+
+// Standard library tests
+lib_basic.ccs
+lib_windows.ccs
+lib_text.ccs
+lib_items.ccs
+lib_status.ccs
+lib_gameplay.ccs
+lib_sound.ccs
+lib_sprite.ccs
+lib_memory.ccs
+lib_advanced.ccs
+lib_rom.ccs
+
+// Full ROM hack tests
+hack_shoptest.ccs

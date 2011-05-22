@@ -1,0 +1,3562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<head>
+  <title>CCScript Command Reference</title>
+
+  <link rel="stylesheet" href="res/basic.css"/>
+
+  <script type="text/javascript">
+  	function init()
+  	{
+  		addkwlinks();
+  	}
+
+  	function addkwlinks()
+  	{
+  		spans = document.getElementsByTagName("span");
+  		for(i in spans)
+  		{
+  			var s = spans[i];
+
+  			if(s.className == "keyword1")
+  			{
+  				var a = document.createElement("a");
+
+  				a.href= "#c_" + s.innerHTML;
+
+				a.innerHTML = s.innerHTML;
+				s.innerHTML = "";
+				s.appendChild(a);
+
+  			}
+  		}
+  	}
+  </script>
+</head>
+
+<body onload="init()">
+<h1>CCScript Command Reference</h1>
+
+<div class="toc">
+  Table of contents
+  <ol>
+    <li><a href="#1">Introduction</a>
+    </li>
+
+    <li><a href="#2">Command reference</a>
+      <ol>
+        <li><a href="#2.1">Basic commands</a></li>
+        <li><a href="#2.2">Window commands</a></li>
+        <li><a href="#2.3">Text output and control</a></li>
+        <li><a href="#2.4">Money and items</a></li>
+        <li><a href="#2.5">Character stats</a></li>
+        <li><a href="#2.6">Gameplay control</a></li>
+        <li><a href="#2.7">Sounds and music</a></li>
+        <li><a href="#2.8">Sprites and visual effects</a></li>
+        <li><a href="#2.9">Memory and advanced commands</a></li>
+        <li><a href="#2.A">ROM linkage commands</a></li>
+      </ol>
+    </li>
+
+    <li><a href="#3">Index</a></li>
+  </ol>
+</div>
+
+
+<h2><a name="1">1. Introduction</a></h2>
+
+<div class="section">
+
+<p>This is a complete reference of the built-in commands available to CCScript programs.
+Collectively, this set of commands makes up the <em>CCScript Standard Library</em>. These
+commands are defined in the file <strong>lib/std.ccs</strong>.</p>
+
+<h4>Navigating the documentation</h4>
+
+<p>Some command entries have example code, demonstrating the use of the commands. If
+you want more information about a command used in a sample code snippet, you can just
+click the name of the command where it is used. For example:</p>
+
+<code><span class="string">"@This block of code starts a battle."</span> <span class="keyword1">next</span>
+<span class="keyword1">battle</span>(<span class="num">56</span>)
+<span class="keyword1">window_open</span>(<span class="num">1</span>)
+<span class="string">"@You win!"</span> <span class="keyword1">end</span></code>
+
+<p>In the above code, the keywords
+<code><span class="keyword1">next</span></code>,
+<code><span class="keyword1">battle</span></code>,
+<code><span class="keyword1">window_open</span></code>, and
+<code><span class="keyword1">end</span></code> are all clickable, and will take you
+to the documentation entry for each respective command.</p>
+
+</div>
+
+
+<h2><a name="2">2. Command reference</a></h2>
+
+
+
+<h3><a name="2.1">2.1. Basic commands</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>These simple commands are among the most commonly used, and provide basic
+  text control, event flag control, and text linkage.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_next">next</a></code></td>	<td>Prompt with nextline.</td></tr>
+      <tr>	<td><code><a href="#c_end">end</a></code></td>		<td>Prompt with end-of-block.</td></tr>
+      <tr>	<td><code><a href="#c_wait">wait</a></code></td>	<td>Wait for input, no prompt.</td></tr>
+      <tr>	<td><code><a href="#c_prompt">prompt</a></code></td><td>Wait for input with prompt.</td></tr>
+      <tr>	<td><code><a href="#c_eob">eob</a></code></td>		<td>End-of-block marker.</td></tr>
+
+      <tr>	<td><code><a href="#c_pause">pause</a></code></td>	<td>Pause for an amount of time.</td></tr>
+      <tr>	<td><code><a href="#c_newline">newline</a></code></td><td>Break to a new line.</td></tr>
+      <tr>	<td><code><a href="#c_clearline">clearline</a></code></td><td>Erase current text line.</td></tr>
+
+      <tr>	<td><code><a href="#c_set">set</a></code></td>		<td>Set an event flag.</td></tr>
+      <tr>	<td><code><a href="#c_unset">unset</a></code></td>	<td>Unset an event flag.</td></tr>
+      <tr>	<td><code><a href="#c_toggle">toggle</a></code></td><td>Toggle the state of an event flag.</td></tr>
+      <tr>	<td><code><a href="#c_call">call</a></code></td>	<td>Jump to other text and return.</td></tr>
+      <tr>	<td><code><a href="#c_goto">goto</a></code></td>	<td>Jump to other text without return.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_next">
+      <code><span class="keyword1">next</span></code>
+    </a>
+
+    <p>Nextline with prompt.</p>
+
+    <h4>Parameters</h4>
+    <p>(none)</p>
+
+    <h4>Description</h4>
+    <p>displays a blinking prompt, waits for the player to press a button, and then
+    breaks to a new line. This command is equivalent to the control code sequence "[03][00]".</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@Onett isn't the only thing on the map."</span> <span class="keyword1">next</span>
+   <span class="string">"@All the info is there, except for the info that isn't there." </span></code>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_end">
+      <code><span class="keyword1">end</span></code>
+    </a>
+
+    <p>End of block with prompt.</p>
+
+    <h4>Parameters</h4>
+    <p>(none)</p>
+
+    <h4>Description</h4>
+    <p>Waits for the player to press a button, and then ends the text block.
+    This command is equivalent to the control code sequence "[13][02]".</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@Hello... and, good-bye!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_wait">
+      <code><span class="keyword1">wait</span></code>
+    </a>
+
+    <p>Wait for input, no prompt.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Waits for the player to press a button, with no visual prompt. Typically used at the end
+    of text blocks, though in most cases you should use the <code><a href="#c_end">end</a></code>
+    command for that purpose.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_prompt">
+      <code><span class="keyword1">prompt</span></code>
+    </a>
+
+    <p>Wait for input with prompt.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Displays a blinking prompt and waits for input from the player. This command behaves the
+    same in battle as in normal text; that is, it is equivalent to the control code <code>[14]</code>.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_eob">
+      <code><span class="keyword1">eob</span></code>
+    </a>
+
+    <p>End text parsing.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Indicates the end of a text block. In most cases you should use <code><a href="#c_end">end</a></code>
+    instead, as this includes the customary prompt-for-input, but in some cases you might want to perform
+    additional actions between the prompt and the end of the block, such as closing a window. In these cases,
+    you could use <code><a href="#c_wait">wait</a></code>, then perform the action, and finally use <code>eob</code>.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_pause">
+      <code><span class="keyword1">pause</span> (ticks)</code>
+    </a>
+
+    <p>Pause for a duration of time.</p>
+
+    <h4>Parameters</h4>
+    <p><code>ticks</code> - the number of frames to pause for</p>
+
+    <h4>Description</h4>
+    <p>Halts text parsing for a fixed amount of time and then continues. Each frame is one 60th of one second,
+    so a <code>ticks</code> value of 0xFF corresponds to a delay of about 4.25 seconds. Pauses are often used
+    to add dramatic tension or natural pacing to dialogue.</p>
+
+    <h4>Pause Slashes</h4>
+    <p>In CCScript, you can also insert short pauses simply by using the characters '/' and '|' in a text string.
+    A '/' corresponds to a pause of 5 frames (one twelfth of a second), and a '|' corresponds to a pause of
+    fifteen frames (one quarter of a second).</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@Hello,/ is anyone there?"</span> <span class="keyword1">next</span>
+   <span class="string">"@.|.|.|.|."</span> <span class="keyword1">next</span>
+   <span class="string">"@Look, I know you're in there;"</span> <span class="keyword1">pause</span>(<span class="num">30</span>)
+   <span class="string">" I can smell the Doritos!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_newline">
+      <code><span class="keyword1">newline</span></code>
+    </a>
+
+    <p>Break to a new line.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Breaks to a new line of text.</p>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_clearline">
+      <code><span class="keyword1">clearline</span></code>
+    </a>
+
+    <p>Erase the current text line.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Erases the current line of text. Subsequent text will appear at the beginning of the line.</p>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_set">
+      <code><span class="keyword1">set</span> (n)</code>
+    </a>
+
+    <p>Set event flag.</p>
+
+    <h4>Parameters</h4>
+    <p><code>n</code> - An event flag or event flag number.</p>
+
+    <h4>Description</h4>
+    <p>Sets (turns on) an event flag. The opposite of unset(n).</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword0">define</span> met_joe = <span class="keyword0">flag</span> <span class="num">140</span>
+
+   <span class="keyword0">if not</span> met_joe {
+      <span class="string">"@Hey, I'm Joe the talking toilet."</span> <span class="keyword1">next</span>
+      <span class="string">"@Nice to meet you."</span>
+      <span class="keyword1">set</span>(met_joe)   <span class="comment">// turn on the "met Joe" flag</span>
+      <span class="keyword1">end</span>
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Hello again!"</span> <span class="keyword1">end</span>
+   }</code>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_unset">
+      <code><span class="keyword1">unset</span> (n)</code>
+    </a>
+
+    <p>Clear event flag.</p>
+
+    <h4>Parameters</h4>
+    <p><code>n</code> - An event flag or event flag number.</p>
+
+    <h4>Description</h4>
+    <p>Unsets (turns off) an event flag. The opposite of set(n).</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword0">define</span> ness_jammies = <span class="keyword0">flag</span> <span class="num">0x2ED</span>
+
+   <span class="comment">// Turn off Ness's pajamas</span>
+   <span class="keyword1">unset</span>(ness_jammies)</code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_toggle">
+      <code><span class="keyword1">toggle</span> (n)</code>
+    </a>
+
+    <p>Toggle event flag.</p>
+
+    <h4>Parameters</h4>
+    <p><code>n</code> - An event flag or event flag number.</p>
+
+    <h4>Description</h4>
+    <p>Toggles the state of an event flag. If the flag is off, this command will turn it on.
+    If the flag is on, this command will turn it off.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_call">
+      <code><span class="keyword1">call</span> (target)</code>
+    </a>
+
+    <p>Jump to text with return.</p>
+
+    <h4>Parameters</h4>
+    <p><code>target</code> - A location to jump to.</p>
+
+    <h4>Description</h4>
+    <p>Jumps to another location and begins parsing text from there. When parsing is finished,
+    the text system will return to the location of the <code>call</code>. The <code>target</code>
+    parameter can be either an absolute address in the ROM, or a label within the program.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_goto">
+      <code><span class="keyword1">goto</span> (target)</code>
+    </a>
+
+    <p>Jump to text, no return.</p>
+
+    <h4>Parameters</h4>
+    <p><code>target</code> - A location to jump to.</p>
+
+    <h4>Description</h4>
+    <p>Jumps to another location and begins parsing text from there. When parsing is finished
+    control will <strong>not</strong> return to the original location of the jump.
+    The <code>target</code> parameter can be either an absolute address in the ROM, or a
+    label within the program.</p>
+  </div>
+
+
+</div>
+
+
+<h3><a name="2.2">2.2. Window commands</a></h3>
+
+<div class="section">
+
+  <div class="subsection">
+  <p>
+  The windowing commands manipulate the game's text windows, allowing you to open
+  new windows, switch between windows, and so on.
+  </p>
+
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_window_open">window_open</a></code></td>			<td>Open a window.</td></tr>
+      <tr>	<td><code><a href="#c_window_switch">window_switch</a></code></td>		<td>Switch to an already open window.</td></tr>
+      <tr>	<td><code><a href="#c_window_close">window_close</a></code></td>		<td>Close a specific window.</td></tr>
+      <tr>	<td><code><a href="#c_window_closetop">window_closetop</a></code></td>	<td>Close the current window.</td></tr>
+      <tr>	<td><code><a href="#c_window_closeall">window_closeall</a></code></td>	<td>Close all text windows.</td></tr>
+      <tr>	<td><code><a href="#c_open_wallet">open_wallet</a></code></td>			<td>Open the wallet window.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_window_open">
+      <code><span class="keyword1">window_open</span> (num)</code>
+    </a>
+
+    <p>Open text window.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - Window number to open</p>
+
+    <h4>Description</h4>
+    <p>Opens a text window. After opening, subsequent text output will appear in the new
+    window, until the window is closed or <code><a href="#c_window_switch">window_switch</a></code> is used.</p>
+
+    <p>Note that in some situations, an opened window will <em>not</em> close automatically at the end of the text block.
+    For example, this is the case if you open a window in a hotspot trigger, or in the startup text.
+    So, if you open a window in either of these situations, make sure you close it explicitly with
+    <code><a href="#c_window_close">window_close</a></code> or <code><a href="#c_window_closeall">window_closeall</a></code>
+    before ending the text block.</p>
+
+    <h4>Window sizes</h4>
+    <p>
+    The following table lists built-in window numbers, sizes, and positions:
+    </p>
+      <table>
+        <thead>
+         <tr>
+          <td>#</td>		<td>Size</td>	<td>Position</td>	<td>Common use</td>
+         </tr>
+        </thead>
+        <tbody>
+        <tr> <td>0</td>		<td>13 x 8</td>	<td>(1, 1)</td>		<td>The standard gameplay menu</td></tr>
+        <tr> <td>1</td>		<td>19 x 8</td>	<td>(12, 1)</td>	<td>The standard dialogue window</td></tr>
+        <tr> <td>2</td>		<td>24 x 16</td><td>(7, 1)</td>		<td>Inventory window</td></tr>
+        <tr> <td>3</td>		<td>6 x 10</td>	<td>(1, 1)</td>		<td>The Use/Give/Drop/Help item menu</td></tr>
+        <tr> <td>4</td>		<td>11 x 6</td>	<td>(1, 3)</td>		<td>PSI description window</td></tr>
+        <tr> <td>5</td>		<td>11 x 16</td><td>(20, 1)</td>	<td>Telephone menu</td></tr>
+        <tr> <td>6</td>		<td>20 x 10</td><td>(8, 1)</td>		<td>Equip menu</td></tr>
+        <tr> <td>7</td>		<td>13 x 16</td><td>(18, 1)</td>	<td>List of equippable items</td></tr>
+        <tr> <td>8</td>		<td>30 x 18</td><td>(1, 1)</td>		<td>The status window</td></tr>
+        <tr> <td>9</td>		<td>19 x 18</td><td>(12, 1)</td>	<td>Shop windows</td></tr>
+        <tr> <td>10</td>	<td>8 x 4</td>	<td>(1, 10)</td>	<td>Cash on hand window</td></tr>
+        <tr> <td>11</td>	<td>11 x 4</td>	<td>(1, 15)</td>	<td>???</td></tr>
+        <tr> <td>12</td>	<td>19 x 16</td><td>(12, 1)</td>	<td>???</td></tr>
+        <tr> <td>13</td>	<td>24 x 16</td><td>(7, 1)</td>		<td>???</td></tr>
+        <tr> <td>14</td>	<td>24 x 6</td>	<td>(4, 1)</td>		<td>Battle message window</td></tr>
+        <tr> <td>15</td>	<td>21 x 6</td>	<td>(1, 1)</td>		<td>Standard-width battle menu</td></tr>
+
+        <tr> <td>16</td>	<td>8 x 8</td>	<td>(4, 1)</td>		<td>Offense/Defense/Assist PSI selection menu</td></tr>
+        <tr> <td>17</td>	<td>12 x 4</td>	<td>(12, 1)</td>	<td>???</td></tr>
+        <tr> <td>18</td>	<td>14 x 6</td>	<td>(1, 1)</td>		<td>Jeff's battle menu</td></tr>
+        <tr> <td>19</td>	<td>30 x 8</td>	<td>(1, 2)</td>		<td>The file selection menu</td></tr>
+        <tr> <td>20</td>	<td>22 x 4</td>	<td>(5, 9)</td>		<td>Continue/Copy/Delete file menu</td></tr>
+        <tr> <td>21</td>	<td>12 x 8</td>	<td>(10, 16)</td>	<td>Copy file menu, 2 slots</td></tr>
+        <tr> <td>22</td>	<td>12 x 6</td>	<td>(10, 16)</td>	<td>Copy file menu, 1 slot</td></tr>
+        <tr> <td>23</td>	<td>21 x 10</td><td>(6, 17)</td>	<td>Delete file confirmation menu</td></tr>
+        <tr> <td>24</td>	<td>16 x 10</td><td>(3, 14)</td>	<td>Text speed selection menu</td></tr>
+        <tr> <td>25</td>	<td>18 x 8</td>	<td>(18, 15)</td>	<td>Sound mode selection menu</td></tr>
+        <tr> <td>26</td>	<td>8 x 4</td>	<td>(5, 4)</td>		<td>Character name input</td></tr>
+        <tr> <td>27</td>	<td>17 x 4</td>	<td>(13, 4)</td>	<td>"Name this X" message</td></tr>
+        <tr> <td>28</td>	<td>30 x 16</td><td>(1, 9)</td>		<td>Letter selection window</td></tr>
+        <tr> <td>29</td>	<td>7 x 4</td>	<td>(7, 3)</td>		<td>Confirmation box: Ness's name</td></tr>
+        <tr> <td>30</td>	<td>7 x 4</td>	<td>(7, 7)</td>		<td>Confirmation box: Paula's name</td></tr>
+        <tr> <td>31</td>	<td>7 x 4</td>	<td>(7, 11)</td>	<td>Confirmation box: Jeff's name</td></tr>
+
+        <tr> <td>32</td>	<td>7 x 4</td>	<td>(7, 15)</td>	<td>Confirmation box: Poo's name</td></tr>
+        <tr> <td>33</td>	<td>8 x 4</td>	<td>(20, 3)</td>	<td>Confirmation box: King's name</td></tr>
+        <tr> <td>34</td>	<td>13 x 6</td>	<td>(15, 7)</td>	<td>Confirmation box: Favorite food</td></tr>
+        <tr> <td>35</td>	<td>13 x 6</td>	<td>(15, 13)</td>	<td>Confirmation box: Favorite thing</td></tr>
+        <tr> <td>36</td>	<td>24 x 4</td>	<td>(4, 21)</td>	<td>Confirmation box: "Are you sure?"</td></tr>
+        <tr> <td>37</td>	<td>13 x 8</td>	<td>(18, 6)</td>	<td>???</td></tr>
+        <tr> <td>38</td>	<td>12 x 4</td>	<td>(12, 1)</td>	<td>???</td></tr>
+        <tr> <td>39</td>	<td>26 x 6</td>	<td>(3, 3)</td>		<td>???</td></tr>
+        <tr> <td>40</td>	<td>7 x 4</td>	<td>(1, 1)</td>		<td>???</td></tr>
+        <tr> <td>41</td>	<td>15 x 4</td>	<td>(16, 8)</td>	<td>???</td></tr>
+        <tr> <td>42</td>	<td>21 x 4</td>	<td>(10, 8)</td>	<td>???</td></tr>
+        <tr> <td>43</td>	<td>27 x 4</td>	<td>(4, 8)</td>		<td>???</td></tr>
+        <tr> <td>44</td>	<td>24 x 16</td><td>(8, 2)</td>		<td>???</td></tr>
+        <tr> <td>45</td>	<td>15 x 6</td>	<td>(3, 11)</td>	<td>???</td></tr>
+        <tr> <td>46</td>	<td>8 x 10</td>	<td>(4, 1)</td>		<td>???</td></tr>
+        <tr> <td>47</td>	<td>30 x 10</td><td>(1, 9)</td>		<td>???</td></tr>
+
+        <tr> <td>48</td>	<td>28 x 6</td>	<td>(1, 1)</td>		<td>???</td></tr>
+        <tr> <td>49</td>	<td>20 x 4</td>	<td>(10, 4)</td>	<td>???</td></tr>
+        <tr> <td>50</td>	<td>15 x 16</td><td>(14, 11)</td>	<td>???</td></tr>
+        <tr> <td>51</td>	<td>9 x 4</td>	<td>(22, 8)</td>	<td>???</td></tr>
+        <tr> <td>52</td>	<td>18 x 18</td><td>(7, 9)</td>		<td>???</td></tr>
+
+        </tbody>
+      </table>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_window_switch">
+      <code><span class="keyword1">window_switch</span> (num)</code>
+    </a>
+
+    <p>Switch to window.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - Number of window to switch to.</p>
+
+    <h4>Description</h4>
+    <p>Switches to an already open window. Switching to a window makes it the topmost window, and
+    subsequent text output will appear in this window until it is switched away from or closed.
+    The specified window number <strong>must</strong> already be opened, or the text system will crash.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="comment">// Open two windows and display a string in each</span>
+   <span class="keyword1">window_open</span>(<span class="num">1</span>)
+   <span class="string">"@This is window 1!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">window_open</span>(<span class="num">24</span>)
+   <span class="string">"@This is window 24!"</span> <span class="keyword1">next</span>
+
+   <span class="comment">// Now switch back to the first window and add more text</span>
+   <span class="keyword1">window_switch</span>(<span class="num">1</span>)
+   <span class="string">"@Now back in window 1!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_window_close">
+      <code><span class="keyword1">window_close</span> (num)</code>
+    </a>
+
+    <p>Close specific window.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - Window number to close</p>
+
+    <h4>Description</h4>
+    <p>Closes an already opened text window. The specified window number must already be open, or
+    the text system will crash.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_window_closetop">
+      <code><span class="keyword1">window_closetop</span></code>
+    </a>
+
+    <p>Close topmost window.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Closes the topmost text window. The topmost window is the one that is currently receiving
+    text output, or the most recently switched-to window that is still open.</p>
+    <p>Note that closing the topmost window does not automatically bring the previous topmost window
+    back to the top. After closing the topmost window, you must explicitly switch to a new window
+    using <code><a href="#c_window_switch">window_switch</a></code> if you want to continue text output.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_window_closeall">
+      <code><span class="keyword1">window_closeall</span></code>
+    </a>
+
+    <p>Close all windows.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Closes all currently open text windows. You can use this command to ensure that all windows
+    are closed if you're not entirely sure what windows may have been opened at a given point.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_open_wallet">
+      <code><span class="keyword1">open_wallet</span></code>
+    </a>
+
+    <p>Open the cash on hand window.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Opens a small window displaying the amount of money the player has on hand.</p>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<h3><a name="2.3">2.3. Text-related commands</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>These commands modify text appearance or print names and other values from the game.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_text_pos">text_pos</a></code></td>		<td>Force text positioning.</td></tr>
+      <tr>	<td><code><a href="#c_text_color">text_color</a></code></td>	<td>Change text color.</td></tr>
+      <tr>	<td><code><a href="#c_text_blips">text_blips</a></code></td>	<td>Change text "blip" sounds.</td></tr>
+      <tr>	<td><code><a href="#c_font_saturn">font_saturn</a></code></td>	<td>Use the Mr. Saturn font</td></tr>
+      <tr>	<td><code><a href="#c_font_normal">font_normal</a></code></td>	<td>Use the normal font.</td></tr>
+      <tr>	<td><code><a href="#c_smash">smash</a></code></td>				<td>Display "SMAAAASH"</td></tr>
+      <tr>	<td><code><a href="#c_youwon">youwon</a></code></td>			<td>Display "YOU WON"</td></tr>
+      <tr>	<td><code><a href="#c_name">name</a></code></td>				<td>Print character names.</td></tr>
+      <tr>	<td><code><a href="#c_itemname">itemname</a></code></td>		<td>Print item names.</td></tr>
+      <tr>	<td><code><a href="#c_psiname">psiname</a></code></td>			<td>Print PSI power names.</td></tr>
+      <tr>	<td><code><a href="#c_teleportname">teleportname</a></code></td><td>Print teleport names.</td></tr>
+      <tr>	<td><code><a href="#c_number">number</a></code></td>			<td>Print numeric value.</td></tr>
+      <tr>	<td><code><a href="#c_money">money</a></code></td>				<td>Print right-aligned money value.</td></tr>
+      <tr>	<td><code><a href="#c_user">user</a></code></td>				<td>Display action user.</td></tr>
+      <tr>	<td><code><a href="#c_target">target</a></code></td>			<td>Display action target.</td></tr>
+      <tr>	<td><code><a href="#c_delta">delta</a></code></td>				<td>Display action delta.</td></tr>
+      <tr>	<td><code><a href="#c_stat">stat</a></code></td>				<td>Display various statistics.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_text_pos">
+      <code><span class="keyword1">text_pos</span> (x, y)</code>
+    </a>
+
+    <p>Change text location.</p>
+
+    <h4>Parameters</h4>
+    <p><code>x</code> - Horizontal position of text, in pixels<br/>
+       <code>y</code> - Vertical position of text, in rows</p>
+
+    <h4>Description</h4>
+    <p>Adjusts the location at which text is displayed in the window. Text immediately after this
+    command should begin displaying at the specified location in the window.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_text_color">
+      <code><span class="keyword1">text_color</span> (color)</code>
+    </a>
+
+    <p>Change text color.</p>
+
+    <h4>Parameters</h4>
+    <p><code>color</code> - index of color "style" to use.</p>
+
+    <h4>Description</h4>
+    <p>Changes the color of subsequent text output. The color change only affects text in the current
+    window until the end of the text block.</p>
+
+    <h4>Color styles</h4>
+    <p>The following table lists the available colors:</p>
+
+      <table>
+        <thead>
+          <tr><td>#</td>	<td>Description</td>		<td>Preview</td></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td>	<td>Normal text</td>
+            <td class="text_preview"><img src="res/txtclr_plain_0.png" alt=""/></td></tr>
+
+          <tr><td>1</td>	<td>Normal text</td>
+            <td class="text_preview"><img src="res/txtclr_plain_1.png" alt=""/></td></tr>
+
+          <tr><td>2</td>	<td>Pink background</td>
+            <td class="text_preview"><img src="res/txtclr_plain_2.png" alt=""/></td></tr>
+
+          <tr><td>3</td>	<td>Normal text</td>
+            <td class="text_preview"><img src="res/txtclr_plain_3.png" alt=""/></td></tr>
+
+          <tr><td>4</td>	<td>Border color background</td>
+            <td class="text_preview"><img src="res/txtclr_plain_4.png" alt=""/></td></tr>
+
+          <tr><td>5</td>	<td>Dark gray; flashes when HP window is open</td>
+            <td class="text_preview"><img src="res/txtclr_plain_5.png" alt=""/></td></tr>
+
+          <tr><td>6</td>	<td>Purple background</td>
+            <td class="text_preview"><img src="res/txtclr_plain_6.png" alt=""/></td></tr>
+
+          <tr><td>7</td>	<td>Interior border background</td>
+            <td class="text_preview"><img src="res/txtclr_plain_7.png" alt=""/></td></tr>
+        </tbody>
+      </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_text_blips">
+      <code><span class="keyword1">text_blips</span> (num)</code>
+    </a>
+
+    <p>Change the text "blip" sound.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - text blip effect number</p>
+
+    <h4>Description</h4>
+    <p>Changes the "blip" sound that plays as text characters are printed. A value of 3
+    turns off the blips entirely. Other values are not really documented.</p>
+
+    <p class="mystery">TODO: somebody document this.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_font_saturn">
+      <code><span class="keyword1">font_saturn</span></code>
+    </a>
+
+    <p>Use the Mr. Saturn font.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Changes the current window's font to the Mr. Saturn font. The change will remain in effect
+    until the font is explicitly switched again, or the window is closed.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_font_normal">
+      <code><span class="keyword1">font_normal</span></code>
+    </a>
+
+    <p>Use the normal font.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Changes the current window's font to the normal text font.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_smash">
+      <code><span class="keyword1">smash</span></code>
+    </a>
+
+    <p>Display the "SMAAAASH" text graphic.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Displays the "SMAAAASH" text graphic in the current window.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@I got {<span class="keyword1">smash</span>}ed by a mouse."</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_youwon">
+      <code><span class="keyword1">youwon</span></code>
+    </a>
+
+    <p>Display the "YOU WON" text graphic.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Displays the "YOU WON" text graphic in the current window.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@I'll bet the mouse saw a message that said"</span> <span class="keyword1">newline</span>
+   <span class="string">"    &lt;{<span class="keyword1">youwon</span>}&gt;    "</span> <span class="keyword1">next</span>
+   <span class="string">"@...or something like that."</span> <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_name">
+      <code><span class="keyword1">name</span> (index)</code>
+    </a>
+
+    <p>Display a character's name.</p>
+
+    <h4>Parameters</h4>
+    <p><code>index</code> - index of the character whose name should be displayed.</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of a character. If the character index specified is zero, the value
+    in the argument register will be loaded and used as the index instead.
+    The following table lists the default character indexes:</p>
+
+      <table>
+        <thead><tr>	<td>Index</td>	<td>Character</td></tr></thead>
+        <tbody>
+          <tr>		<td>0</td>		<td>(Load index from argument register)</td></tr>
+          <tr>		<td>1</td>		<td>Ness</td></tr>
+          <tr>		<td>2</td>		<td>Paula</td></tr>
+          <tr>		<td>3</td>		<td>Jeff</td></tr>
+          <tr>		<td>4</td>		<td>Poo</td></tr>
+          <tr>		<td>5</td>		<td>Pokey</td></tr>
+          <tr>		<td>6</td>		<td>Picky</td></tr>
+          <tr>		<td>7</td>		<td>King</td></tr>
+          <tr>		<td>8</td>		<td>Tony</td></tr>
+          <tr>		<td>9</td>		<td>Bubble Monkey</td></tr>
+          <tr>		<td>10</td>		<td>Brick Road</td></tr>
+          <tr>		<td>11</td>		<td>Flying Man 1</td></tr>
+          <tr>		<td>12</td>		<td>Flying Man 2</td></tr>
+          <tr>		<td>13</td>		<td>Flying Man 3</td></tr>
+          <tr>		<td>14</td>		<td>Flying Man 4</td></tr>
+          <tr>		<td>15</td>		<td>Flying Man 5</td></tr>
+          <tr>		<td>16</td>		<td>Teddy Bear</td></tr>
+          <tr>		<td>17</td>		<td>Super Plush Bear</td></tr>
+        </tbody>
+      </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_itemname">
+      <code><span class="keyword1">itemname</span> (item)</code>
+    </a>
+
+    <p>Display an item name.</p>
+
+    <h4>Parameters</h4>
+    <p><code>item</code> - index of the item whose name should be printed.</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of an item. If the specified item number is zero, the value in the
+    argument register will be loaded and used as the item index instead.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="comment">// Prints "@Item 42 is the Hyper beam."</span>
+   <span class="string">"@Item 42 is the {<span class="keyword1">itemname</span>(42)}."</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_psiname">
+      <code><span class="keyword1">psiname</span> (index)</code>
+    </a>
+
+    <p>Display a PSI name.</p>
+
+    <h4>Parameters</h4>
+    <p><code>index</code> - index of the PSI power to print.</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of a PSI power. If the specified index is zero, the value in the
+    argument register will be loaded and used as the PSI index instead. The following table
+    lists the default PSI names for each index:</p>
+
+    <table>
+      <thead><tr>	<td>Index</td>	<td>PSI name</td></tr></thead>
+      <tbody>
+        <tr>		<td>0</td>		<td>(Load index from argument register)</td></tr>
+        <tr>		<td>1</td>		<td>PSI Rockin &alpha;</td></tr>
+        <tr>		<td>2</td>		<td>PSI Rockin &beta;</td></tr>
+        <tr>		<td>3</td>		<td>PSI Rockin &gamma;</td></tr>
+        <tr>		<td>4</td>		<td>PSI Rockin &Omega;</td></tr>
+        <tr>		<td>5</td>		<td>PSI Fire &alpha;</td></tr>
+        <tr>		<td>6</td>		<td>PSI Fire &beta;</td></tr>
+        <tr>		<td>7</td>		<td>PSI Fire &gamma;</td></tr>
+        <tr>		<td>8</td>		<td>PSI Fire &Omega;</td></tr>
+        <tr>		<td>9</td>		<td>PSI Freeze &alpha;</td></tr>
+        <tr>		<td>10</td>		<td>PSI Freeze &beta; </td></tr>
+        <tr>		<td>11</td>		<td>PSI Freeze &gamma;</td></tr>
+        <tr>		<td>12</td>		<td>PSI Freeze &Omega;</td></tr>
+        <tr>		<td>13</td>		<td>PSI Thunder &alpha;</td></tr>
+        <tr>		<td>14</td>		<td>PSI Thunder &beta; </td></tr>
+        <tr>		<td>15</td>		<td>PSI Thunder &gamma;</td></tr>
+        <tr>		<td>16</td>		<td>PSI Thunder &Omega;</td></tr>
+        <tr>		<td>17</td>		<td>PSI Flash &alpha;</td></tr>
+        <tr>		<td>18</td>		<td>PSI Flash &beta; </td></tr>
+        <tr>		<td>19</td>		<td>PSI Flash &gamma;</td></tr>
+        <tr>		<td>20</td>		<td>PSI Flash &Omega;</td></tr>
+        <tr>		<td>21</td>		<td>PSI Starstorm &alpha;</td></tr>
+        <tr>		<td>22</td>		<td>PSI Starstorm &Omega;</td></tr>
+        <tr>		<td>23</td>		<td>PSI Lifeup &alpha;</td></tr>
+        <tr>		<td>24</td>		<td>PSI Lifeup &beta; </td></tr>
+        <tr>		<td>25</td>		<td>PSI Lifeup &gamma;</td></tr>
+        <tr>		<td>26</td>		<td>PSI Lifeup &Omega;</td></tr>
+        <tr>		<td>27</td>		<td>PSI Healing &alpha;</td></tr>
+        <tr>		<td>28</td>		<td>PSI Healing &beta; </td></tr>
+        <tr>		<td>29</td>		<td>PSI Healing &gamma;</td></tr>
+        <tr>		<td>30</td>		<td>PSI Healing &Omega;</td></tr>
+        <tr>		<td>31</td>		<td>Shield &alpha;</td></tr>
+        <tr>		<td>32</td>		<td>Shield &beta; </td></tr>
+        <tr>		<td>33</td>		<td>Shield &gamma;</td></tr>
+        <tr>		<td>34</td>		<td>Shield &Omega;</td></tr>
+        <tr>		<td>35</td>		<td>PSI Shield &alpha;</td></tr>
+        <tr>		<td>36</td>		<td>PSI Shield &beta; </td></tr>
+        <tr>		<td>37</td>		<td>PSI Shield &gamma;</td></tr>
+        <tr>		<td>38</td>		<td>PSI Shield &Omega;</td></tr>
+        <tr>		<td>39</td>		<td>Offense up &alpha;</td></tr>
+        <tr>		<td>40</td>		<td>Offense up &Omega;</td></tr>
+        <tr>		<td>41</td>		<td>Defense down &alpha;</td></tr>
+        <tr>		<td>42</td>		<td>Defense down &Omega;</td></tr>
+        <tr>		<td>43</td>		<td>Hypnosis &alpha;</td></tr>
+        <tr>		<td>44</td>		<td>Hypnosis &Omega;</td></tr>
+        <tr>		<td>45</td>		<td>PSI Magnet &alpha;</td></tr>
+        <tr>		<td>46</td>		<td>PSI Magnet &Omega;</td></tr>
+        <tr>		<td>47</td>		<td>Paralysis &alpha;</td></tr>
+        <tr>		<td>48</td>		<td>Paralysis &Omega;</td></tr>
+        <tr>		<td>49</td>		<td>Brainshock &alpha;</td></tr>
+        <tr>		<td>50</td>		<td>Brainshock &Omega;</td></tr>
+        <tr>		<td>51</td>		<td>Teleport &alpha;</td></tr>
+        <tr>		<td>52</td>		<td>Teleport &beta;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_teleportname">
+      <code><span class="keyword1">teleportname</span> (dest)</code>
+    </a>
+
+    <p>Display a teleport destination name.</p>
+
+    <h4>Parameters</h4>
+    <p><code>dest</code> - index of the teleport destination to print.</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of a PSI Teleport destination. If the specified destination number is zero,
+    the value in the argument register will be loaded and used as the destination index instead.
+    The following table lists the default destination names:</p>
+    <table>
+      <thead><tr>	<td>Index</td>	<td>PSI name</td></tr></thead>
+      <tbody>
+        <tr>		<td>0</td>		<td>(Load index from argument register)</td></tr>
+        <tr>		<td>1</td>		<td>Onett</td></tr>
+        <tr>		<td>2</td>		<td>Twoson</td></tr>
+        <tr>		<td>3</td>		<td>Threed</td></tr>
+        <tr>		<td>4</td>		<td>Saturn Valley</td></tr>
+        <tr>		<td>5</td>		<td>Fourside</td></tr>
+        <tr>		<td>6</td>		<td>Winters</td></tr>
+        <tr>		<td>7</td>		<td>Summers</td></tr>
+        <tr>		<td>8</td>		<td>Scaraba</td></tr>
+        <tr>		<td>9</td>		<td>Dalaam</td></tr>
+        <tr>		<td>10</td>		<td>Deep Darknes</td></tr>
+        <tr>		<td>11</td>		<td>Tenda Village</td></tr>
+        <tr>		<td>12</td>		<td>Underworld</td></tr>
+        <tr>		<td>13</td>		<td>&lt;blank&gt;</td></tr>
+        <tr>		<td>14</td>		<td>Dusty Dunes</td></tr>
+        <tr>		<td>15</td>		<td>&lt;blank&gt;</td></tr>
+        <tr>		<td>16</td>		<td>&lt;blank&gt;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_number">
+      <code><span class="keyword1">number</span> (val)</code>
+    </a>
+
+    <p>Display a number.</p>
+
+    <h4>Parameters</h4>
+    <p><code>val</code> - value to display as a number.</p>
+
+    <h4>Description</h4>
+    <p>Prints a numerical value, formatted as a decimal number. If <code>val</code> is zero,
+    the value in the argument register will be loaded and displayed instead.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">number</span>(<span class="num">42</span>)      <span class="comment">// prints "42"</span>
+   <span class="keyword1">number</span>(<span class="num">0x100</span>)   <span class="comment">// prints "256"</span>
+   <span class="string">"@I have {<span class="keyword1">number</span>(0xA)} dollars."</span>   <span class="comment">// prints "@I have 10 dollars."</span></code>
+
+  </div>
+
+
+  <div class="desc">
+    <a name="c_money">
+      <code><span class="keyword1">money</span> (val)</code>
+    </a>
+
+    <p>Display a cash amount.</p>
+
+    <h4>Parameters</h4>
+    <p><code>val</code> - value to display as money.</p>
+
+    <h4>Description</h4>
+    <p>Prints a numerical value formatted like a currency amount, i.e., with a '$' in front of it.
+    The output is aligned to the right side of the current text window, so this command is mainly
+    useful for displaying lists of prices, as in a shop.
+    If <code>val</code> is zero, the value in the argument register will be loaded and displayed
+    instead.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">money</span>(<span class="num">0xFF</span>)    <span class="comment">// prints "$255<sup><small><u>00</u></small></sup>"</span>
+
+   <span class="keyword0">define</span> item = 0x5A
+   <span class="keyword0">define</span> price = <span class="num">4000</span>
+
+   <span class="string">"{<span class="keyword1">itemname</span>(item)} {<span class="keyword1">money</span>(price)}."</span>   <span class="comment">// prints "Hamburger          $4000<sup><small><u>00</u></small></sup>"</span>   </code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_user">
+      <code><span class="keyword1">user</span></code>
+    </a>
+
+    <p>Display the user of an action.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of the current "user" of some action.</p>
+
+    <p class="mystery">The exact usage of this code is still a bit of a mystery.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_target">
+      <code><span class="keyword1">target</span></code>
+    </a>
+
+    <p>Display the target of an action.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Prints the name of the current "target" of some action.</p>
+    <p class="mystery">The exact usage of this code is still a bit of a mystery.</p>
+    <p></p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_delta">
+      <code><span class="keyword1">delta</span></code>
+    </a>
+
+    <p>Display change caused by action.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Prints the amount of change in some statistic caused by the current action.
+    Examples might include the amount of HP recovered by eating a food item, or
+    the amount of damage suffered in an attack.</p>
+    <p class="mystery">The exact usage of this code is still a bit of a mystery.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_stat">
+      <code><span class="keyword1">stat</span> (num)</code>
+    </a>
+
+    <p>Display various statistics.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - index of the stat to display.</p>
+
+    <h4>Description</h4>
+    <p>Prints character statistic and other miscellaneous data. If the <code>index</code> parameter
+    is zero, the value in the argument register will be loaded and used instead. The following table
+    lists the stat values associated with each index:</p>
+
+    <table style="display:inline">
+      <thead><tr>	<td>Index</td>	<td>Value</td></tr></thead>
+      <tbody>
+        <tr>		<td>0</td>		<td>(Load index from argument register)</td></tr>
+        <tr>		<td>1</td>		<td>(Unknown)</td></tr>
+        <tr>		<td>2</td>		<td>Player name</td></tr>
+        <tr>		<td>3</td>		<td>Dog's name</td></tr>
+        <tr>		<td>4</td>		<td>Favorite food</td></tr>
+        <tr>		<td>5</td>		<td>PSI Special</td></tr>
+        <tr>		<td>6</td>		<td>Cash on hand</td></tr>
+        <tr>		<td>7</td>		<td>ATM balance</td></tr>
+        <tr>		<td>8</td>		<td>Ness's Name</td></tr>
+        <tr>		<td>9</td>		<td>Ness's Level</td></tr>
+        <tr>		<td>10</td>		<td>Ness's EXP</td></tr>
+        <tr>		<td>11</td>		<td>Ness: current HP</td></tr>
+        <tr>		<td>12</td>		<td>Ness: rolling HP target</td></tr>
+        <tr>		<td>13</td>		<td>Ness: maximum HP</td></tr>
+        <tr>		<td>14</td>		<td>Ness: current PP</td></tr>
+        <tr>		<td>15</td>		<td>Ness: rolling PP target</td></tr>
+        <tr>		<td>16</td>		<td>Ness: maximum PP</td></tr>
+        <tr>		<td>17</td>		<td>Ness: Total Offense</td></tr>
+        <tr>		<td>18</td>		<td>Ness: Total Defense</td></tr>
+        <tr>		<td>19</td>		<td>Ness: Total Speed</td></tr>
+        <tr>		<td>20</td>		<td>Ness: Total Guts</td></tr>
+        <tr>		<td>21</td>		<td>Ness: Total Luck</td></tr>
+        <tr>		<td>22</td>		<td>Ness: Total Vitality</td></tr>
+        <tr>		<td>23</td>		<td>Ness: Total IQ</td></tr>
+        <tr>		<td>24</td>		<td>Ness: Base IQ</td></tr>
+        <tr>		<td>25</td>		<td>Ness: Base Offense</td></tr>
+        <tr>		<td>26</td>		<td>Ness: Base Defense</td></tr>
+        <tr>		<td>27</td>		<td>Ness: Base Speed</td></tr>
+        <tr>		<td>28</td>		<td>Ness: Base Guts</td></tr>
+        <tr>		<td>29</td>		<td>Ness: Base Luck</td></tr>
+        <tr>		<td>30</td>		<td>Paula: Name</td></tr>
+        <tr>		<td>31</td>		<td>Paula: Level</td></tr>
+        <tr>		<td>32</td>		<td>Paula: EXP</td></tr>
+        <tr>		<td>33</td>		<td>Paula: current HP</td></tr>
+        <tr>		<td>34</td>		<td>Paula: rolling HP target</td></tr>
+        <tr>		<td>35</td>		<td>Paula: maximum HP</td></tr>
+        <tr>		<td>36</td>		<td>Paula: current PP</td></tr>
+        <tr>		<td>37</td>		<td>Paula: rolling PP target</td></tr>
+        <tr>		<td>38</td>		<td>Paula: maximum PP</td></tr>
+        <tr>		<td>39</td>		<td>Paula: Total Offense</td></tr>
+        <tr>		<td>40</td>		<td>Paula: Total Defense</td></tr>
+        <tr>		<td>41</td>		<td>Paula: Total Speed</td></tr>
+        <tr>		<td>42</td>		<td>Paula: Total Guts</td></tr>
+        <tr>		<td>43</td>		<td>Paula: Total Luck</td></tr>
+        <tr>		<td>44</td>		<td>Paula: Total Vitality</td></tr>
+        <tr>		<td>45</td>		<td>Paula: Total IQ</td></tr>
+        <tr>		<td>46</td>		<td>Paula: Base IQ</td></tr>
+        <tr>		<td>47</td>		<td>Paula: Base Offense</td></tr>
+        <tr>		<td>48</td>		<td>Paula: Base Defense</td></tr>
+        <tr>		<td>49</td>		<td>Paula: Base Speed</td></tr>
+        <tr>		<td>50</td>		<td>Paula: Base Guts</td></tr>
+        <tr>		<td>51</td>		<td>Paula: Base Luck</td></tr>
+      </tbody>
+    </table>
+    <table style="display:inline; margin-left:0">
+      <thead><tr>	<td>Index</td>	<td>Value</td></tr></thead>
+      <tbody>
+        <tr>		<td>52</td>		<td>Jeff: Name</td></tr>
+        <tr>		<td>53</td>		<td>Jeff: Level</td></tr>
+        <tr>		<td>54</td>		<td>Jeff: EXP</td></tr>
+        <tr>		<td>55</td>		<td>Jeff: current HP</td></tr>
+        <tr>		<td>56</td>		<td>Jeff: rolling HP target</td></tr>
+        <tr>		<td>57</td>		<td>Jeff: maximum HP</td></tr>
+        <tr>		<td>58</td>		<td>Jeff: current PP</td></tr>
+        <tr>		<td>59</td>		<td>Jeff: rolling PP target</td></tr>
+        <tr>		<td>60</td>		<td>Jeff: maximum PP</td></tr>
+        <tr>		<td>61</td>		<td>Jeff: Total Offense</td></tr>
+        <tr>		<td>62</td>		<td>Jeff: Total Defense</td></tr>
+        <tr>		<td>63</td>		<td>Jeff: Total Speed</td></tr>
+        <tr>		<td>64</td>		<td>Jeff: Total Guts</td></tr>
+        <tr>		<td>65</td>		<td>Jeff: Total Luck</td></tr>
+        <tr>		<td>66</td>		<td>Jeff: Total Vitality</td></tr>
+        <tr>		<td>67</td>		<td>Jeff: Total IQ</td></tr>
+        <tr>		<td>68</td>		<td>Jeff: Base IQ</td></tr>
+        <tr>		<td>69</td>		<td>Jeff: Base Offense</td></tr>
+        <tr>		<td>70</td>		<td>Jeff: Base Defense</td></tr>
+        <tr>		<td>71</td>		<td>Jeff: Base Speed</td></tr>
+        <tr>		<td>72</td>		<td>Jeff: Base Guts</td></tr>
+        <tr>		<td>73</td>		<td>Jeff: Base Luck</td></tr>
+        <tr>		<td>74</td>		<td>Poo: Name</td></tr>
+        <tr>		<td>75</td>		<td>Poo: Level</td></tr>
+        <tr>		<td>76</td>		<td>Poo: EXP</td></tr>
+        <tr>		<td>77</td>		<td>Poo: current HP</td></tr>
+        <tr>		<td>78</td>		<td>Poo: rolling HP target</td></tr>
+        <tr>		<td>79</td>		<td>Poo: maximum HP</td></tr>
+        <tr>		<td>80</td>		<td>Poo: current PP</td></tr>
+        <tr>		<td>81</td>		<td>Poo: rolling PP target</td></tr>
+        <tr>		<td>82</td>		<td>Poo: maximum PP</td></tr>
+        <tr>		<td>83</td>		<td>Poo: Total Offense</td></tr>
+        <tr>		<td>84</td>		<td>Poo: Total Defense</td></tr>
+        <tr>		<td>85</td>		<td>Poo: Total Speed</td></tr>
+        <tr>		<td>86</td>		<td>Poo: Total Guts</td></tr>
+        <tr>		<td>87</td>		<td>Poo: Total Luck</td></tr>
+        <tr>		<td>88</td>		<td>Poo: Total Vitality</td></tr>
+        <tr>		<td>89</td>		<td>Poo: Total IQ</td></tr>
+        <tr>		<td>90</td>		<td>Poo: Base IQ</td></tr>
+        <tr>		<td>91</td>		<td>Poo: Base Offense</td></tr>
+        <tr>		<td>92</td>		<td>Poo: Base Defense</td></tr>
+        <tr>		<td>93</td>		<td>Poo: Base Speed</td></tr>
+        <tr>		<td>94</td>		<td>Poo: Base Guts</td></tr>
+        <tr>		<td>95</td>		<td>Poo: Base Luck</td></tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+
+<h3><a name="2.4">2.4. Money and items</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>
+  These commands are used to manipulate the player's items and money during the game.
+  </p>
+
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_give">give</a></code></td>			<td>Give an item to a character</td></tr>
+      <tr>	<td><code><a href="#c_take">take</a></code></td>			<td>Take an item from a character</td></tr>
+      <tr>	<td><code><a href="#c_hasitem">hasitem</a></code></td>		<td>Check if a character has an item</td></tr>
+      <tr>	<td><code><a href="#c_full">full</a></code></td>			<td>Check if a character's inventory is full</td></tr>
+      <tr>	<td><code><a href="#c_givemoney">givemoney</a></code></td>	<td>Give money to the player</td></tr>
+      <tr>	<td><code><a href="#c_takemoney">takemoney</a></code></td>	<td>Take money from the player</td></tr>
+      <tr>	<td><code><a href="#c_hasmoney">hasmoney</a></code></td>	<td>Check if the player has an amount of money</td></tr>
+      <tr>	<td><code><a href="#c_deposit">deposit</a></code></td>		<td>Add money to the ATM account</td></tr>
+      <tr>	<td><code><a href="#c_withdraw">withdraw</a></code></td>	<td>Remove money from the ATM account</td></tr>
+      <tr>	<td><code><a href="#c_usable">usable</a></code></td>		<td>Check if a character can use an item</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_give">
+      <code><span class="keyword1">give</span> (char, item)</code>
+    </a>
+
+    <p>Put an item in a party member's inventory.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to give the item to<br/>
+       <code>item</code> - item to give</p>
+
+    <h4>Description</h4>
+    <p>Gives the party member <code>char</code> one of <code>item</code>. If the <code>item</code>
+    parameter is zero, the value in the argument register will be loaded and used instead. The
+    <code>char</code> parameter should either be one of 1, 2, 3, or 4, corresponding to a specific
+    party member, or 0xFF, to put the item into the inventory of the first party member with
+    sufficient free space.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@{<span class="keyword1">name</span>(1)}, I now present you with this very significant item."</span> <span class="keyword1">next</span>
+   <span class="keyword1">give</span>(<span class="num">1</span>, <span class="num">206</span>)
+   <span class="string">"@({<span class="keyword1">name</span>(1)} got the {<span class="keyword1">itemname</span>(206)}.)"</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_take">
+      <code><span class="keyword1">take</span> (char, item)</code>
+    </a>
+
+    <p>Take an item from a party member's inventory.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to take the item from<br/>
+       <code>item</code> - item to take</p>
+
+    <h4>Description</h4>
+    <p>Removes one of the specified <code>item</code> from the inventory of party member
+    <code>char</code>. If the <code>item</code> parameter is zero, the value in the argument
+    register is loaded and used instead. The <code>char</code> parameter should either be
+    one of 1, 2, 3, or 4, corresponding to a specific party member, or 0xFF, to take the item
+    from the first party member who has one.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">take</span>(<span class="num">0xFF</span>, <span class="num">211</span>)
+   <span class="string">"@({name(1)}'s Tendakraut was stolen.)"</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_hasitem">
+      <code><span class="keyword1">hasitem</span> (char, item)</code>
+    </a>
+
+    <p>Check if a party member has an item.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to check<br/>
+       <code>item</code> - item number to check for</p>
+
+    <h4>Description</h4>
+    <p>Returns "true" if party member <code>char</code> has at least one of <code>item</code>.
+    Can be used with an <code><span class="keyword0">if</span></code> statement to check if
+    an item is in the player's inventory. The <code>char</code> parameter should either be one
+    of 1, 2, 3, or 4, corresponding to a specific party member, or 0xFF to check all party
+    members' inventories.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword0">define</span> showticket = <span class="num">0xb2</span>
+
+   <span class="string">"@Tickets, please!"</span> <span class="keyword1">next</span>
+   <span class="keyword0">if</span> <span class="keyword1">hasitem</span>(<span class="num">0xff</span>, showticket) {
+      <span class="string">"@Thank you, right this way."</span> <span class="keyword1">end</span>
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Ah, you, uh, don't have a ticket."</span> <span class="keyword1">end</span>
+   }</code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_full">
+      <code><span class="keyword1">full</span> (char)</code>
+    </a>
+
+    <p>Check if a party member's inventory is full.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to check.</p>
+
+    <h4>Description</h4>
+    <p>Returns "true" if party member <code>char</code> has no free slots in his or her
+    inventory. If <code>char</code> is zero, the value in the argument register will
+    be loaded and used instead. If <code>char</code> is 0xFF, all party members' inventories
+    will be checked, and the command will return "false" if <strong>any</strong> party
+    member has free slots.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword0">if</span> <span class="keyword1">full</span>(<span class="num">0xff</span>) {
+      <span class="string">"@You don't have enough room."</span> <span class="keyword1">next</span>
+      <span class="string">"@Throw away a salt packet or something so I can give you this bicycle."</span> <span class="keyword1">next</span>
+   }</code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_givemoney">
+      <code><span class="keyword1">givemoney</span> (amount)</code>
+    </a>
+
+    <p>Give money to player.</p>
+
+    <h4>Parameters</h4>
+    <p><code>amount</code> - amount of money to give.</p>
+
+    <h4>Description</h4>
+    <p>Gives the player the specified amount of cash. If <code>amount</code> is zero,
+    the value in the argument register is loaded and used instead.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_takemoney">
+      <code><span class="keyword1">takemoney</span> (amount)</code>
+    </a>
+
+    <p>Take money from the player.</p>
+
+    <h4>Parameters</h4>
+    <p><code>amount</code> - amount of money to take.</p>
+
+    <h4>Description</h4>
+    <p>Takes the specified amount of cash from the player. If <code>amount</code> is zero,
+    the avalue in the argument register is loaded and used instead.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_hasmoney">
+      <code><span class="keyword1">hasmoney</span> (amount)</code>
+    </a>
+
+    <p>Check if the player has an amount of money.</p>
+
+    <h4>Parameters</h4>
+    <p><code>amount</code> - amount of money to check for.</p>
+
+    <h4>Description</h4>
+    <p>Returns "true" if the player has at least <code>amount</code> dollars on hand.
+    You can use this command with an <code><span class="keyword0">if</span></code> statement
+    to check if the player has sufficient funds for some action.
+    If <code>amount</code> is zero, the value in the argument register is loaded and
+    used instead.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@A bicycle? That will be $1000, please."</span> <span class="keyword1">next</span>
+   <span class="keyword0">if</span> <span class="keyword1">hasmoney</span>(<span class="num">1000</span>) {
+      <span class="keyword1">takemoney</span>(<span class="num">1000</span>)
+      <span class="keyword1">sound</span>(SND_KACHING)
+      <span class="string">"@Thank you, come again!"</span> <span class="keyword1">end</span>
+      <span class="keyword1">give</span>(<span class="num">0xff</span>, <span class="num">176</span>)
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@I am sorry, but you do not have enough money."</span>
+   }</code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_deposit">
+      <code><span class="keyword1">deposit</span> (amount)</code>
+    </a>
+
+    <p>Deposit money into the ATM.</p>
+
+    <h4>Parameters</h4>
+    <p><code>amount</code> - amount of money to deposit.</p>
+
+    <h4>Description</h4>
+    <p>Adds money to the player's bank account. (In the game, not in reality.) If
+    <code>amount</code> is zero, the value in the argument register is loaded and used instead.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_withdraw">
+      <code><span class="keyword1">withdraw</span> (amount)</code>
+    </a>
+
+    <p>Take money from the ATM.</p>
+
+    <h4>Parameters</h4>
+    <p><code>amount</code> - amount of money to remove.</p>
+
+    <h4>Description</h4>
+    <p>Removes money from the player's bank account. If <code>amount</code> is zero, the value
+    in the argument register is loaded and used instead.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_usable">
+      <code><span class="keyword1">usable</span> (char, item)</code>
+    </a>
+
+    <p>Check if character can use item.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to check<br/>
+       <code>item</code> - item number to check for usability</p>
+
+    <h4>Description</h4>
+    <p>Returns "true" if the party member <code>char</code> can use item number <code>item</code>,
+    "false" otherwise.</p>
+  </div>
+
+
+</div>
+
+
+<h3><a name="2.5">2.5. Character status</a></h3>
+<div class="section">
+
+  <div class="subsection">
+  <p>These commands alter character status, including hit points, psychic points, level,
+  status afflictions, and other statistics.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_inflict">inflict</a></code></td>					<td>Inflict a status change.</td></tr>
+      <tr><td><code><a href="#c_healall">healall</a></code></td>					<td>Revitalize all party members.</td></tr>
+      <tr><td><code><a href="#c_heal">heal</a></code></td>							<td>Heal HP.</td></tr>
+      <tr><td><code><a href="#c_hurt">hurt</a></code></td>							<td>Damage HP.</td></tr>
+      <tr><td><code><a href="#c_heal_percent">heal_percent</a></code></td>			<td>Heal HP by percentage.</td></tr>
+      <tr><td><code><a href="#c_hurt_percent">hurt_percent</a></code></td>			<td>Damage HP by percentage.</td></tr>
+      <tr><td><code><a href="#c_recoverpp">recoverpp</a></code></td>				<td>Recover PP.</td></tr>
+      <tr><td><code><a href="#c_consumepp">consumepp</a></code></td>				<td>Consume PP.</td></tr>
+      <tr><td><code><a href="#c_recoverpp_percent">recoverpp_percent</a></code></td><td>Recover PP by percentage.</td></tr>
+      <tr><td><code><a href="#c_consumepp_percent">consumepp_percent</a></code></td><td>Consume PP by percentage.</td></tr>
+      <tr><td><code><a href="#c_change_level">change_level</a></code></td>			<td>Change character level.</td></tr>
+      <tr><td><code><a href="#c_boost_exp">boost_exp</a></code></td>				<td>Give experience points.</td></tr>
+      <tr><td><code><a href="#c_boost_iq">boost_iq</a></code></td>					<td>Increase IQ.</td></tr>
+      <tr><td><code><a href="#c_boost_guts">boost_guts</a></code></td>				<td>Increase Guts.</td></tr>
+      <tr><td><code><a href="#c_boost_speed">boost_speed</a></code></td>			<td>Increase Speed.</td></tr>
+      <tr><td><code><a href="#c_boost_vitality">boost_vitality</a></code></td>		<td>Increase Vitality.</td></tr>
+      <tr><td><code><a href="#c_boost_luck">boost_luck</a></code></td>				<td>Increase Luck.</td></tr>
+
+    </tbody>
+  </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_inflict">
+      <code><span class="keyword1">inflict</span> (char, status)</code>
+    </a>
+
+    <p>Inflict status change.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to inflict with a status ailment.<br/>
+       <code>status</code> - status ailment to inflict.</p>
+
+    <h4>Description</h4>
+    <p>Gives the specified party member a status affliction.</p>
+    <p class="mystery">TODO: document parameters for the underlying control code,
+    [19 05 XX YY YY].</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_healall">
+      <code><span class="keyword1">healall</span></code>
+    </a>
+
+    <p>Heal all party members.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Heals all party members completely, restoring both HP and PP fully.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@(In only a few seconds, this machine fully revitalizes you,"</span> <span class="keyword1">next</span>
+   <span class="string">"@just like a good night's sleep.)"</span> <span class="keyword1">next</span>
+   <span class="keyword1">healall</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_heal">
+      <code><span class="keyword1">heal</span> (char, amount)</code>
+    </a>
+
+    <p>Recover HP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to heal.<br/>
+       <code>amount</code> - amount of HP to recover.</p>
+
+    <h4>Description</h4>
+    <p>Heals a party member by a specified HP amount. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to heal all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_hurt">
+      <code><span class="keyword1">hurt</span> (char, amount)</code>
+    </a>
+
+    <p>Deplete HP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to hurt.<br/>
+       <code>amount</code> - amount of HP damage to deal.</p>
+
+    <h4>Description</h4>
+    <p>Damages a party member by a specified HP amount. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to damage all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_heal_percent">
+      <code><span class="keyword1">heal_percent</span> (char, percent)</code>
+    </a>
+
+    <p>Recover a percentage of maximum HP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to heal.<br/>
+       <code>percent</code> - percentage of HP to recover.</p>
+
+    <h4>Description</h4>
+    <p>Recovers a percentage of the specified party member's HP. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to heal all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_hurt_percent">
+      <code><span class="keyword1">hurt_percent</span> (char, percent)</code>
+    </a>
+
+    <p>Deplete a percentage of maximum HP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to hurt.<br/>
+       <code>percent</code> percentage of HP to deplete.</p>
+
+    <h4>Description</h4>
+    <p>Deals damage that is a percentage of the specified party member's maximum HP.
+    The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to damage all party members.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@Ness's HP drops to 0!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">hurt_percent</span>(<span class="num">1</span>, <span class="num">100</span>)
+   <span class="string">"@Jeff's HP drops to 0!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">hurt_percent</span>(<span class="num">3</span>, <span class="num">100</span>)
+   <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_recoverpp">
+      <code><span class="keyword1">recoverpp</span> (char, amount)</code>
+    </a>
+
+    <p>Restore PP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose PP will be restored<br/>
+       <code>amount</code> - amount of PP to restore</p>
+
+    <h4>Description</h4>
+    <p>Recovers a specified amount of PP to a party member. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to recover PP to all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_consumepp">
+      <code><span class="keyword1">consumepp</span> (char, amount)</code>
+    </a>
+
+    <p>Deplete PP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose PP will be depleted<br/>
+       <code>amount</code> - amount of PP to deplete.</p>
+
+    <h4>Description</h4>
+    <p>Depletes the PP of a party member by a specified amount. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to deplete PP for all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_recoverpp_percent">
+      <code><span class="keyword1">recoverpp_percent</span> (char, percent)</code>
+    </a>
+
+    <p>Recover a percentage of PP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose PP will be restored.<br/>
+       <code>percent</code> - percentage of PP to restore.</p>
+
+    <h4>Description</h4>
+    <p>Recovers a percentage of a party member's maximum PP. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to recover PP for all party members.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_consumepp_percent">
+      <code><span class="keyword1">consumepp_percent</span> (char, percent)</code>
+    </a>
+
+    <p>Deplete a percentage of PP.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose PP will be depleted.<br/>
+       <code>percent</code> - percentage of PP to deplete.</p>
+
+    <h4>Description</h4>
+    <p>Consumes a percentage of a party member's maximum PP. The parameter <code>char</code>
+    can either be one of 1, 2, 3, or 4, to refer to a specific party member, or 0xFF,
+    to deplete PP for all party members.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@The strange blue light made you dizzy!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">consumepp_percent</span>(<span class="num">0xff</span>, <span class="num">50</span>)
+   <span class="string">"@Your PP was drained!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_change_level">
+      <code><span class="keyword1">change_level</span> (char, level)</code>
+    </a>
+
+    <p>Change a character's level.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose level will change.<br/>
+       <code>level</code> - the new level.</p>
+
+    <h4>Description</h4>
+    <p>Changes a character's level, giving them all the stat boosts and PSI powers
+    associated with that level. If the specified level is lower than the character's
+    current level, their stats will drop down to match!</p>
+
+    <h4>Example</h4>
+    <code>   <span class="comment">// Note: don't actually do this unless you want to really tick off your players</span>
+   <span class="string">"@Pokey used the de-levelizer!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">change_level</span>(<span class="num">1</span>, <span class="num">5</span>)
+   <span class="string">"@Ness's level dropped to 5!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_exp">
+      <code><span class="keyword1">boost_exp</span> (char, exp)</code>
+    </a>
+
+    <p>Give experience points.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character to give EXP to.<br/>
+       <code>exp</code> - amount of EXP to give.</p>
+
+    <h4>Description</h4>
+    <p>Gives experience points to a party member. If the character's total experience
+    passes a level-up threshold, the appropriate level-up text will be displayed,
+    complete with music.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">boost_exp</span>(<span class="num">1</span>, <span class="num">1</span>)
+   <span class="string">"@It was a good experience."</span> <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_iq">
+      <code><span class="keyword1">boost_iq</span> (char, amount)</code>
+    </a>
+
+    <p>Increase IQ stat.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose IQ will be increased.<br/>
+       <code>amount</code> - amount of IQ to give.</p>
+
+    <h4>Description</h4>
+    <p>Increases the IQ stat of the specified character.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_guts">
+      <code><span class="keyword1">boost_guts</span> (char, amount)</code>
+    </a>
+
+    <p>Increase Guts stat.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose Guts will be increased.<br/>
+       <code>amount</code> - amount of Guts to give.</p>
+
+    <h4>Description</h4>
+    <p>Increases the Guts stat of the specified character.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_speed">
+      <code><span class="keyword1">boost_speed</span> (char, amount)</code>
+    </a>
+
+    <p>Increase Speed stat.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose Speed will be increased.<br/>
+       <code>amount</code> - amount of Speed to give.</p>
+
+    <h4>Description</h4>
+    <p>Increases the Speed stat of the specified character.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_vitality">
+      <code><span class="keyword1">boost_vitality</span> (char, amount)</code>
+    </a>
+
+    <p>Increase Vitality stat.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose Vitality will be increased.<br/>
+       <code>amount</code> - amount of Vitality to give.</p>
+
+    <h4>Description</h4>
+    <p>Increases the Vitality stat of the specified character.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_boost_luck">
+      <code><span class="keyword1">boost_luck</span> (char, amount)</code>
+    </a>
+
+    <p>Increase Luck stat.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - character whose Luck will be increased.<br/>
+       <code>amount</code> - amount of Luck to give.</p>
+
+    <h4>Description</h4>
+    <p>Increases the Luck stat of the specified character.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+<h3><a name="2.6">2.6. Gameplay control</a></h3>
+<div class="section">
+  <div class="subsection">
+  <p>These commands perform various actions related to events within the game,
+  including party control, battles, warping, and so on.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>													<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_battle">battle</a></code></td>				<td>Begin a battle.</td></tr>
+      <tr>	<td><code><a href="#c_warp">warp</a></code></td>					<td>Warp to a destination</td></tr>
+      <tr>	<td><code><a href="#c_teleport">teleport</a></code></td>			<td>Use PSI Teleport</td></tr>
+      <tr>	<td><code><a href="#c_anchor_set">anchor_set</a></code></td>		<td>Set exit mouse anchor</td></tr>
+      <tr>	<td><code><a href="#c_anchor_warp">anchor_warp</a></code></td>		<td>Warp to exit mouse anchor</td></tr>
+      <tr>	<td><code><a href="#c_event">event</a></code></td>					<td>Cut to a special event sequence</td></tr>
+      <tr>	<td><code><a href="#c_learnpsi">learnpsi</a></code></td>			<td>Learn a PSI technique</td></tr>
+      <tr>	<td><code><a href="#c_party_add">party_add</a></code></td>			<td>Add a party member</td></tr>
+      <tr>	<td><code><a href="#c_party_remove">party_remove</a></code></td>	<td>Remove a party member</td></tr>
+      <tr>	<td><code><a href="#c_save">save</a></code></td>					<td>Save the game</td></tr>
+      <tr>	<td><code><a href="#c_hotspot_on">hotspot_on</a></code></td>		<td>Activate a hotspot</td></tr>
+      <tr>	<td><code><a href="#c_hotspot_off">hotspot_off</a></code></td>		<td>Deactivate a hotspot</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_battle">
+      <code><span class="keyword1">battle</span> (num)</code>
+    </a>
+
+    <p>Begin a battle.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - index of the battle group to fight</p>
+
+    <h4>Description</h4>
+    <p>Starts a battle against the specified group of enemies. If <code>num</code> is zero, the
+    value in the argument register will be loaded and used as the battle group number. Check the
+    Battle Entry Editor in JHack to see which groups contain which enemies.</p>
+    <p>Before beginning the battle, this command closes all active windows. Thus, if you want
+    any text to appear after the battle, you will need to open a new window using
+    <code><a href="#c_window_open">window_open</a></code>.</p>
+
+    <h4>Example</h4>
+    <code>
+   <span class="string">"@Are you asking for a challenge?!"</span> <span class="keyword1">next</span>
+   <span class="keyword1">battle</span>(<span class="num">145</span>)
+
+   <span class="keyword1">window_open</span>(<span class="num">1</span>)
+   <span class="string">"@Oh. {<span class="keyword1">pause</span>(15)} You won."</span>
+   <span class="keyword1">end</span>
+    </code>
+  </div>
+
+  <div class="desc">
+    <a name="c_warp">
+      <code><span class="keyword1">warp</span> (dest)</code>
+    </a>
+
+    <p>Warp to a predefined destination.</p>
+
+    <h4>Parameters</h4>
+    <p><code>dest</code> - index of the destination to warp to.</p>
+
+    <h4>Description</h4>
+    <p>Warps the party to a location defined in the warp destination list. If <code>dest</code>
+    is zero, the value in the argument register will be loaded and used as the destination index.
+    To view and/or edit
+    the available warp destinations, see the [1F 21 XX] Teleport Table Editor in JHack.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@Hello... and, good-bye!"</span> <span class="keyword1">next</span>
+   <span class="string">"@Shall I?"</span> <span class="keyword1">newline</span>
+   <span class="keyword0">menu</span> {
+      <span class="string">"Yes"</span> : { }
+      <span class="string">"No"</span> : {
+         <span class="keyword1">warp</span>(<span class="num">0x6a</span>)
+         <span class="keyword1">eob</span>
+      }
+   }</code>
+  </div>
+
+  <div class="desc">
+    <a name="c_teleport">
+      <code><span class="keyword1">teleport</span> (dest, type)</code>
+    </a>
+
+    <p>Use PSI Teleport.</p>
+
+    <h4>Parameters</h4>
+    <p><code>dest</code> - PSI Teleport destination to warp to.<br/>
+       <code>type</code> - type of Teleport to use.</p>
+
+    <h4>Description</h4>
+    <p>Causes the party to use PSI Teleport to travel to the specified destination. To view
+    and/or edit the available teleport destinations, see the Teleport Destination Editor in JHack.</p>
+    <h4>Teleport Types</h4>
+      <table>
+        <thead><tr><td>Type</td>	<td>ID</td>				<td>Description</td></tr></thead>
+        <tbody>
+          <tr>		<td>1</td>		<td>TELEPORT_ALPHA</td>	<td>PSI Teleport &alpha;</td></tr>
+          <tr>		<td>2</td>		<td>TELEPORT_BETA</td>	<td>PSI Teleport &beta;</td></tr>
+          <tr>		<td>4</td>		<td>TELEPORT_OMEGA</td>	<td>Like Teleport &beta;, but requires no room; very tight spinning.</td></tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_anchor_set">
+      <code><span class="keyword1">anchor_set</span></code>
+    </a>
+
+    <p>Set the exit mouse anchor.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Sets the "anchor" for the exit mouse to the party's current location. The anchor is where
+    the party will be warped when <code><span class="keyword1">anchor_warp</span></code> is used.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_anchor_warp">
+      <code><span class="keyword1">anchor_warp</span></code>
+    </a>
+
+    <p>Warp to the exit mouse anchor.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Warps the party to the exit mouse anchor, which was previously set with <code><span class="keyword1">anchor_set</span></code>.</p>
+
+    <h4>Example</h4>
+    <code>telepod_set:
+   <span class="string">"@{<span class="keyword1">name</span>(1)} placed the Telepod marker on the ground."</span>
+   <span class="keyword1">anchor_set</span>
+   <span class="keyword1">end</span>
+
+telepod_use:
+   <span class="string">"@{<span class="keyword1">name</span>(1)} used the Telepod."</span>
+   <span class="keyword1">anchor_warp</span>
+   <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_event">
+      <code><span class="keyword1">event</span> (num)</code>
+    </a>
+
+    <p>Call a special event.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - special event number.</p>
+
+    <h4>Description</h4>
+    <p>Runs the specified special event. This is used to display the coffee scenes,
+    name registration, ending credits, and miscellaneous. See the event table for details.</p>
+
+    <h4>Special Events Table</h4>
+      <table>
+        <thead><tr>	<td>Index</td>	<td>ID</td>				<td>Description</td></tr></thead>
+        <tbody>
+          <tr>		<td>1</td>		<td>EVENT_COFFEE</td>	<td>The Saturn Valley coffee scene</td></tr>
+          <tr>		<td>2</td>		<td>EVENT_TEA</td>		<td>The Tenda Village tea scene</td></tr>
+          <tr>		<td>3</td>		<td>EVENT_NAME1</td>	<td>Register your name</td></tr>
+          <tr>		<td>4</td>		<td>EVENT_NAME2</td>	<td>Register your name a second time</td></tr>
+          <tr>		<td>7</td>		<td>EVENT_TOWNMAP</td>	<td>Open the town map</td></tr>
+          <tr>		<td>9</td>		<td>EVENT_SSTONE</td>	<td>Show sound stone</td></tr>
+          <tr>		<td>10</td>		<td>EVENT_TITLE</td>	<td>Show the title screen</td></tr>
+          <tr>		<td>11</td>		<td>EVENT_CAST</td>		<td>Show the cast of characters</td></tr>
+          <tr>		<td>12</td>		<td>EVENT_CREDITS</td>	<td>Play the end credits</td></tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_learnpsi">
+      <code><span class="keyword1">learnpsi</span> (char, psi)</code>
+    </a>
+
+    <p>Realize a PSI power.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member who will learn the PSI power.<br/>
+       <code>psi</code> - PSI power to learn.</p>
+
+    <h4>Description</h4>
+    <p>Makes the specified character realize the specified PSI power. This command only
+    works with a few special PSI powers, and even then only for certain characters.</p>
+
+    <h4>PSI Powers</h4>
+      <table>
+        <thead><tr>	<td>Index</td>	<td>Description</td></tr></thead>
+        <tbody>
+          <tr>		<td>1</td>		<td>Teleport &alpha; - works with Ness and Poo</td></tr>
+          <tr>		<td>2</td>		<td>Teleport &beta; - works with Ness and Poo</td></tr>
+          <tr>		<td>3</td>		<td>Starstorm &alpha; - only works for Poo</td></tr>
+          <tr>		<td>4</td>		<td>Starstorm &Omega; - only works for Poo</td></tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_party_add">
+      <code><span class="keyword1">party_add</span> (char)</code>
+    </a>
+
+    <p>Add character to party.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - index of character to add</p>
+
+    <h4>Description</h4>
+    <p>Adds a character to the party.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="string">"@{<span class="keyword1">name</span>(2)} has joined your party!"</span>
+
+   <span class="comment">// Play the fanfare music, then resume normal music after three seconds</span>
+   <span class="keyword1">music</span>(<span class="num">0x7B</span>)
+   <span class="keyword1">pause</span>(<span class="num">180</span>)
+   <span class="keyword1">music_resume</span>
+
+   <span class="keyword1">party_add</span>(<span class="num">2</span>)</code>
+  </div>
+
+  <div class="desc">
+    <a name="c_party_remove">
+      <code><span class="keyword1">party_remove</span> (char)</code>
+    </a>
+
+    <p>Remove character from party.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - index of character to remove</p>
+
+    <h4>Description</h4>
+    <p>Removes a character from the party.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">party_remove</span>(<span class="num">2</span>)
+   <span class="string">"@Oh great, Paula got kidnapped again."</span>
+   <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_save">
+      <code><span class="keyword1">save</span></code>
+    </a>
+
+    <p>Save the game.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Saves the game into the current file slot.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_hotspot_on">
+      <code><span class="keyword1">hotspot_on</span> (slot, hotspot, target)</code>
+    </a>
+
+    <p>Activate a hotspot.</p>
+
+    <h4>Parameters</h4>
+    <p><code>slot</code> - which "active hotspot" slot to use; must be either 1 or 2<br/>
+       <code>hotspot</code> - index of the hotspot to activate<br/>
+       <code>target</code> - location of text to use when the player enters the hotspot</p>
+
+    <h4>Description</h4>
+    <p>Activates a map hotspot, so that when the player walks into the area defined by the hotspot,
+    the specified text will be called. Only two hotspots can be active at any given time, one in
+    each <code>slot</code>. To view or edit the available hotspots, see the Hotspot Editor in JHack.</p>
+
+    <p>Note that if you open a window to display text in a hotspot trigger, you have to close the
+    windows yourself after you're done with them, otherwise they won't go away!</p>
+
+    <h4>Example</h4>
+    <code><span class="string">"@Turning on the hotspot..."</span>
+<span class="keyword1">hotspot_on</span>(<span class="num">1</span>, <span class="num">12</span>, hotspot_text)
+<span class="keyword1">end</span>
+
+hotspot_text:
+   <span class="keyword1">window_open</span>(<span class="num">1</span>)
+   <span class="string">"@You activated the hotspot!"</span>
+
+   <span class="comment">// wait for input, then close the window, then end the block</span>
+   <span class="keyword1">wait</span>
+   <span class="keyword1">window_closeall</span>
+   <span class="keyword1">eob</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_hotspot_off">
+      <code><span class="keyword1">hotspot_off</span> (hotspot)</code>
+    </a>
+
+    <p>Deactivate a hotspot.</p>
+
+    <h4>Parameters</h4>
+    <p><code>hotspot</code> - hotspot to deactivate</p>
+
+    <h4>Description</h4>
+    <p>Deactivates a hotspot that had been previously activated with <code><span class="keyword1">hotspot_on</span></code>.
+    After deactivation, the hotspot's text will no longer be triggered when the player walks into the area defined by
+    the hotspot.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<h3><a name="2.7">2.7. Music and sound</a></h3>
+<div class="section">
+  <div class="subsection">
+  <p>These commands affect the aural experience through playing sound effects,
+  changing the music, applying effects to the currently playing music, and so on.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_sound">sound</a></code></td>								<td>Play a sound effect.</td></tr>
+      <tr>	<td><code><a href="#c_music">music</a></code></td>								<td>Play a music track.</td></tr>
+      <tr>	<td><code><a href="#c_music_stop">music_stop</a></code></td>					<td>Stop all music.</td></tr>
+      <tr>	<td><code><a href="#c_music_resume">music_resume</a></code></td>				<td>Resume playing music.</td></tr>
+      <tr>	<td><code><a href="#c_music_effect">music_effect</a></code></td>				<td>Apply music effect.</td></tr>
+      <tr>	<td><code><a href="#c_music_switching_off">music_switching_off</a></code></td>	<td>Disable map music switching.</td></tr>
+      <tr>	<td><code><a href="#c_music_switching_on">music_switching_on</a></code></td>	<td>Enable map music switching.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_sound">
+      <code><span class="keyword1">sound</span> (num)</code>
+    </a>
+
+    <p>Play a sound effect.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - index of the sound effect to play.</p>
+
+    <h4>Description</h4>
+    <p>Plays a sound effect. Playback begins immediately, and text parsing continues while
+    the sound is playing. If <code>num</code> is zero, the value in the argument register
+    will be loaded and used to look up the sound to play instead.</p>
+
+    <h4>Effects table</h4>
+    <p>
+    The following table lists the normal sound effects. Note that some of these effects may
+    be different depending on what background music is playing. Sounds can also be specified
+    using the more descriptive names listed here, which are defined in <strong>lib/stdarg.ccs</strong>.
+	</p>
+    <div>
+    <table style="display:inline">
+      <thead><tr>
+      <td>Index</td>	<td>Name</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr><td>0</td>	<td>(Load from argument register)</td>	</tr>
+      <tr><td>1</td>	<td>SND_CURSORBLIP</td>	</tr>
+      <tr><td>2</td>	<td>SND_CURSORCONFIRM</td>	</tr>
+      <tr><td>3</td>	<td>SND_CURSORBEEP</td>	</tr>
+      <tr><td>4</td>	<td>SND_CURSORNAME</td>	</tr>
+      <tr><td>5</td>	<td>SND_ERRORBEEP</td>	</tr>
+      <tr><td>6</td>	<td>(no sound)</td>	</tr>
+      <tr><td>7</td>	<td>SND_TEXTBLIP</td>	</tr>
+      <tr><td>8</td>	<td>SND_DOOROPEN</td>	</tr>
+      <tr><td>9</td>	<td>SND_DOORCLOSE</td>	</tr>
+      <tr><td>10</td>	<td>SND_PHONERING</td>	</tr>
+      <tr><td>11</td>	<td>SND_PHONEPICKUP</td>	</tr>
+      <tr><td>12</td>	<td>SND_KACHING</td>	</tr>
+      <tr><td>13</td>	<td>SND_FOOTSTEP</td>	</tr>
+      <tr><td>14</td>	<td>SND_BEEOOP</td>	</tr>
+      <tr><td>15</td>	<td>SND_BUZZ</td>	</tr>
+      <tr><td>16</td>	<td>SND_GIFTOPEN</td>	</tr>
+      <tr><td>17</td>	<td>SND_LANDING</td>	</tr>
+      <tr><td>18</td>	<td>SND_STAIRS</td>	</tr>
+      <tr><td>19</td>	<td>SND_HIGHBUZZ</td>	</tr>
+      <tr><td>20</td>	<td>SND_LOWBUZZ</td>	</tr>
+      <tr><td>21</td>	<td>SND_SQUEAKYBUZZ</td>	</tr>
+      <tr><td>22</td>	<td>SND_TRUMPET</td>	</tr>
+      <tr><td>23</td>	<td>SND_MUFFLEDBUZZ</td>	</tr>
+      <tr><td>24</td>	<td>SND_HEROATTACK</td>	</tr>
+      <tr><td>25</td>	<td>SND_MONSTERATTACK</td>	</tr>
+      <tr><td>26</td>	<td>SND_BASH</td>	</tr>
+      <tr><td>27</td>	<td>SND_SHOOT</td>	</tr>
+      <tr><td>28</td>	<td>SND_PRAYING</td>	</tr>
+      <tr><td>29</td>	<td>SND_PSI1</td>	</tr>
+      <tr><td>30</td>	<td>SND_NORMALBASH</td>	</tr>
+      <tr><td>31</td>	<td>SND_SMASH</td>	</tr>
+      <tr><td>32</td>	<td>SND_HERODEATH</td>	</tr>
+      <tr><td>33</td>	<td>SND_ENEMYDEATH</td>	</tr>
+      <tr><td>34</td>	<td>SND_GIFTOPEN2</td>	</tr>
+      <tr><td>35</td>	<td>SND_DODGE</td>	</tr>
+      <tr><td>36</td>	<td>SND_RECOVER</td>	</tr>
+      <tr><td>37</td>	<td>SND_STATUSRECOVER</td>	</tr>
+      <tr><td>38</td>	<td>SND_SHIELD1</td>	</tr>
+      <tr><td>39</td>	<td>SND_SHIELD2</td>	</tr>
+      <tr><td>40</td>	<td>SND_STATSUP</td>	</tr>
+      <tr><td>41</td>	<td>SND_STATSDOWN</td>	</tr>
+      <tr><td>42</td>	<td>SND_HYPNOSIS</td>	</tr>
+      <tr><td>43</td>	<td>SND_MAGNET</td>	</tr>
+      <tr><td>44</td>	<td>SND_PARALYSIS</td>	</tr>
+      <tr><td>45</td>	<td>SND_BRAINSHOCK1</td>	</tr>
+      <tr><td>46</td>	<td>SND_THUMP</td>	</tr>
+      <tr><td>47</td>	<td>SND_CRITICAL</td>	</tr>
+      <tr><td>48</td>	<td>SND_ROCKIN1</td>	</tr>
+      <tr><td>49</td>	<td>SND_ROCKIN2</td>	</tr>
+      <tr><td>50</td>	<td>SND_ROCKIN3</td>	</tr>
+      <tr><td>51</td>	<td>SND_FIRE1</td>	</tr>
+      <tr><td>52</td>	<td>SND_FIRE2</td>	</tr>
+      <tr><td>53</td>	<td>SND_FIRE3</td>	</tr>
+      <tr><td>54</td>	<td>SND_BRAINSHOCK2</td>	</tr>
+      <tr><td>55</td>	<td>SND_PSI2</td>	</tr>
+      <tr><td>56</td>	<td>SND_FREEZE1</td>	</tr>
+      <tr><td>57</td>	<td>SND_FREEZE2</td>	</tr>
+      <tr><td>58</td>	<td>SND_DEFENSEDOWN1 </td>	</tr>
+      <tr><td>59</td>	<td>SND_DEFENSEDOWN2 </td>	</tr>
+      <tr><td>60</td>	<td>SND_THUNDERMISS</td>	</tr>
+      <tr><td>61</td>	<td>SND_THUNDERHIT1 </td>	</tr>
+      <tr><td>62</td>	<td>SND_THUNDERHIT2 </td>	</tr>
+      </tbody>
+    </table>
+
+    <table style="display:inline; margin-left:0;">
+      <thead><tr>
+      <td>Index</td>	<td>Name</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr><td>63</td>	<td>SND_THUNDERDAMAGE</td>	</tr>
+      <tr><td>64</td>	<td>SND_STARSTORM</td>	</tr>
+      <tr><td>65</td>	<td>SND_FLASH1</td>	</tr>
+      <tr><td>66</td>	<td>SND_FLASH2</td>	</tr>
+      <tr><td>67</td>	<td>SND_FLASH3</td>	</tr>
+      <tr><td>68</td>	<td>SND_EAT</td>	</tr>
+      <tr><td>69</td>	<td>SND_QUIETBEEP</td>	</tr>
+      <tr><td>70</td>	<td>SND_MISSILE</td>	</tr>
+      <tr><td>71</td>	<td>SND_HISS</td>	</tr>
+      <tr><td>72</td>	<td>SND_STATUSCHANGE </td>	</tr>
+      <tr><td>73</td>	<td>SND_PING</td>	</tr>
+      <tr><td>74</td>	<td>SND_THUMP2</td>	</tr>
+      <tr><td>75</td>	<td>SND_MBR</td>	</tr>
+      <tr><td>76</td>	<td>SND_MAGNET2</td>	</tr>
+      <tr><td>77</td>	<td>SND_MAGNET3</td>	</tr>
+      <tr><td>78</td>	<td>SND_WHIRR</td>	</tr>
+      <tr><td>79</td>	<td>SND_PARALYSIS2</td>	</tr>
+      <tr><td>80</td>	<td>SND_BRAINSHOCK3</td>	</tr>
+      <tr><td>81</td>	<td>SND_DRILL</td>	</tr>
+      <tr><td>82</td>	<td>SND_SPORES</td>	</tr>
+      <tr><td>83</td>	<td>SND_AFFLICTED</td>	</tr>
+      <tr><td>84</td>	<td>SND_KERPOW</td>	</tr>
+      <tr><td>85</td>	<td>SND_MYSTERIOUS</td>	</tr>
+      <tr><td>86</td>	<td>SND_WARBLING</td>	</tr>
+      <tr><td>87</td>	<td>(no sound)</td>	</tr>
+      <tr><td>88</td>	<td>SND_SPROING</td>	</tr>
+      <tr><td>89</td>	<td>SND_REFUEL</td>	</tr>
+      <tr><td>90</td>	<td>SND_GIYGASWEAK</td>	</tr>
+      <tr><td>91</td>	<td>SND_FIRE4</td>	</tr>
+      <tr><td>92</td>	<td>SND_MUFFLEDBUZZ2</td>	</tr>
+      <tr><td>93</td>	<td>SND_SHIELDREFLECT</td>	</tr>
+      <tr><td>94</td>	<td>SND_CHIRP</td>	</tr>
+      <tr><td>95</td>	<td>SND_BUTTERFLY</td>	</tr>
+      <tr><td>96</td>	<td>SND_POSSESSED</td>	</tr>
+      <tr><td>97</td>	<td>SND_STAIRS2</td>	</tr>
+      <tr><td>98</td>	<td>SND_DRUMS</td>	</tr>
+      <tr><td>99</td>	<td>SND_STARMASTER</td>	</tr>
+      <tr><td>100</td>	<td>SND_EDENWARP</td>	</tr>
+      <tr><td>101</td>	<td>SND_BIRDS</td>	</tr>
+      <tr><td>102</td>	<td>SND_SPECIALITEM</td>	</tr>
+      <tr><td>103</td>	<td>SND_LEARNPSI</td>	</tr>
+      <tr><td>104</td>	<td>SND_CHICKEN</td>	</tr>
+      <tr><td>105</td>	<td>SND_SPHINX1</td>	</tr>
+      <tr><td>106</td>	<td>SND_SPHINX2</td>	</tr>
+      <tr><td>107</td>	<td>SND_SPHINX3</td>	</tr>
+      <tr><td>108</td>	<td>SND_SPHINX4</td>	</tr>
+      <tr><td>109</td>	<td>SND_SPHINX5</td>	</tr>
+      <tr><td>110</td>	<td>SND_PYRAMIDOPEN</td>	</tr>
+      <tr><td>111</td>	<td>SND_RAPIDKNOCK</td>	</tr>
+      <tr><td>112</td>	<td>(no sound)</td>	</tr>
+      <tr><td>113</td>	<td>SND_MANIMANI</td>	</tr>
+      <tr><td>114</td>	<td>SND_CREEPY</td>	</tr>
+      <tr><td>115</td>	<td>SND_BOXOPEN1</td>	</tr>
+      <tr><td>116</td>	<td>SND_BOXTAKE</td>	</tr>
+      <tr><td>117</td>	<td>(unknown)</td>	</tr>
+      <tr><td>118</td>	<td>SND_CHICKEN2</td>	</tr>
+      <tr><td>119</td>	<td>SND_PSI3</td>	</tr>
+      <tr><td>120</td>	<td>SND_GUITAR</td>	</tr>
+      <tr><td>121</td>	<td>SND_BEEP2</td>	</tr>
+      <tr><td>122</td>	<td>SND_TRUMPETBLAST </td>	</tr>
+      <tr><td>123</td>	<td>(no sound)</td>	</tr>
+      <tr><td>124</td>	<td>SND_FUNKY</td>	</tr>
+     </tbody>
+    </table>
+    </div>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music">
+      <code><span class="keyword1">music</span> (num)</code>
+    </a>
+
+    <p>Play a music track.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - index of the music track to play.</p>
+
+    <h4>Description</h4>
+    <p>Changes the currently playing music to the specified track number. If <code>num</code>
+    is zero, the value in the argument register will be loaded and used as the track number.
+    The music change lasts until some other action changes the music. Note that walking onto an
+    area of the same map that has different music will cause a music change, unless the
+    <code><a href="#c_music_switching_off">music_switching_off</a></code> command has been used.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music_stop">
+      <code><span class="keyword1">music_stop</span></code>
+    </a>
+
+    <p>Stop the music.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Stops all music playback. Music will stay off until some other action changes the
+    currently playing music.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music_resume">
+      <code><span class="keyword1">music_resume</span></code>
+    </a>
+
+    <p>Resume playing music.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Restarts the music using whatever music would normally be played on the area of the
+    map the player currently occupies.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music_effect">
+      <code><span class="keyword1">music_effect</span> (num)</code>
+    </a>
+
+    <p>Applies a music effect.</p>
+
+    <h4>Parameters</h4>
+    <p><code>num</code> - index of the music effect to apply.</p>
+
+    <h4>Description</h4>
+    <p>Applies a specified effect to the currently playing music track.
+    If <code>num</code> is zero, the value in the argument register is loaded
+    and used as the effect number.</p>
+
+    <h4>Effects</h4>
+      <table>
+        <thead><tr><td>Index</td>	<td>Description</td></tr></thead>
+        <tbody>
+          <tr>		<td>0</td>		<td>(Load effect number from argument register)</td></tr>
+          <tr>		<td>1</td>		<td>Play normally</td></tr>
+          <tr>		<td>2</td>		<td>Quick fade out</td></tr>
+          <tr>		<td>3</td>		<td>Fade out</td></tr>
+          <tr>		<td>4</td>		<td>(No effect?)</td></tr>
+          <tr>		<td>5</td>		<td>Increase playback speed for one second</td></tr>
+          <tr>		<td>6</td>		<td>(No effect?)</td></tr>
+          <tr>		<td>7</td>		<td>Decrease volume slightly</td></tr>
+          <tr>		<td>8</td>		<td>Restore original volume</td></tr>
+          <tr>		<td>9 - 14</td>	<td>Disable sound channel 0 - 5</td></tr>
+          <tr>		<td>15 - 20</td><td>Emphasize sound channel 0 - 5</td></tr>
+          <tr>		<td>21</td>		<td>Increase overall pitch</td></tr>
+          <tr>		<td>22</td>		<td>(No effect?)</td></tr>
+          <tr>		<td>23</td>		<td>Decrease volume substantially</td></tr>
+        </tbody>
+      </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music_switching_off">
+      <code><span class="keyword1">music_switching_off</span></code>
+    </a>
+
+    <p>Disable map music switching.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Disables automatic music changes based on map areas. After this command has been executed,
+    moving to different areas (of the same map) will not cause the music to change, even if those
+    areas have different music. The command remains in effect until
+    <code><a href="#c_music_switching_on">music_switching_on</a></code> is used.</p>
+    <p>Map music switching is enabled by default.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_music_switching_on">
+      <code><span class="keyword1">music_switching_on</span></code>
+    </a>
+
+    <p>Enable map music switching.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Enables automatic music changes based on map areas. Moving to an area of the current map
+    that has different music will cause the currently playing music to change. This is the default
+    effect, and this will only not occur if <code><a href="#c_music_switching_off">music_switching_off</a></code>
+    has been used.</p>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+<h3><a name="2.8">2.8. Sprites and visual effects</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>These commands are primarily related to controlling the appearance of sprites
+  and various visual effects.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_char_direction">char_direction</a></code></td>		<td>Change character's direction</td></tr>
+      <tr>	<td><code><a href="#c_sprite_direction">sprite_direction</a></code></td>	<td>Change sprite's direction</td></tr>
+      <tr>	<td><code><a href="#c_show_char">show_char</a></code></td>					<td>Visibility effect for party member</td></tr>
+      <tr>	<td><code><a href="#c_show_party">show_party</a></code></td>				<td>Visibility effect for party</td></tr>
+      <tr>	<td><code><a href="#c_show_char_float">show_char_float</a></code></td>		<td>Create floating sprite next to party member</td></tr>
+      <tr>	<td><code><a href="#c_show_sprite_float">show_sprite_float</a></code></td>	<td>Create floating sprite next to TPT sprite</td></tr>
+      <tr>	<td><code><a href="#c_hide_char">hide_char</a></code></td>					<td>Make party member invisible</td></tr>
+      <tr>	<td><code><a href="#c_hide_party">hide_party</a></code></td>				<td>Make party invisible</td></tr>
+      <tr>	<td><code><a href="#c_hide_sprite">hide_sprite</a></code></td>				<td>Make a TPT sprite vanish</td></tr>
+      <tr>	<td><code><a href="#c_hide_char_float">hide_char_float</a></code></td>		<td>Remove party member's floating sprite</td></tr>
+      <tr>	<td><code><a href="#c_hide_sprite_float">hide_sprite_float</a></code></td>	<td>Remove TPT sprite's floating sprite</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_char_direction">
+      <code><span class="keyword1">char_direction</span> (char, dir)</code>
+    </a>
+
+    <p>Change character direction.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member<br/>
+       <code>dir</code> - direction to face</p>
+
+    <h4>Description</h4>
+    <p>Changes the facing direction of a party member. If <code>dir</code> is zero, the value
+    in the argument register will be loaded and used as the direction value.</p>
+    <table>
+      <thead><tr><td>#</td>		<td>Direction</td></tr></thead>
+      <tbody>
+        <tr><td>0</td>			<td>(Load direction from argument register)</td></tr>
+        <tr><td>1</td>			<td>NORTH</td></tr>
+        <tr><td>2</td>			<td>NORTHEAST</td></tr>
+        <tr><td>3</td>			<td>EAST</td></tr>
+        <tr><td>4</td>			<td>SOUTHEAST</td></tr>
+        <tr><td>5</td>			<td>SOUTH</td></tr>
+        <tr><td>6</td>			<td>SOUTHWEST</td></tr>
+        <tr><td>7</td>			<td>WEST</td></tr>
+        <tr><td>8</td>			<td>NORTHWEST</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_sprite_direction">
+      <code><span class="keyword1">sprite_direction</span> (tpt, dir)</code>
+    </a>
+
+    <p>Change sprite direction.</p>
+
+    <h4>Parameters</h4>
+    <p><code>tpt</code> - TPT number of the sprite to change<br/>
+       <code>dir</code> - direction to face</p>
+
+    <h4>Description</h4>
+    <p>Changes the facing direction of a TPT sprite. The TPT sprite must be currently on screen
+    for this command to work; otherwise it will crash. If <code>dir</code> is zero, the value
+    in the argument register will be loaded and used as the direction value. Direction values are
+    the same as for <code><a href="#c_char_direction">char_direction</a></code>.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_show_char">
+      <code><span class="keyword1">show_char</span> (char, effect)</code>
+    </a>
+
+    <p>Visibility special effect.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to show<br/>
+       <code>effect</code> - visibility transition effect to apply</p>
+
+    <h4>Description</h4>
+    <p>Applies a visibility transition to a party member. Despite the name, this command can either make
+    a character visible <em>or</em> invisible, depending on the effect used.
+    If the party member was hidden with
+    <code><a href="#c_hide_party">hide_party</a></code> or <code><a href="#c_hide_char">hide_char</a></code>,
+    this command can be used to make them visible again.</p>
+    <p>It can also be used to make party members disappear using a special effect, instead of simply vanishing
+    instantly. However, note that if you make a party member invisible with this command, they will become
+    visible again as soon as the player moves. To hide party members permanently, use
+    <code><a href="#c_hide_party">hide_party</a></code> or <code><a href="#c_hide_char">hide_char</a></code>
+    after using this command.</p>
+
+    <h4>Transition Effects</h4>
+      <table>
+        <thead><tr>	<td>Effect</td>	<td>ID</td>				<td>Description</td></tr></thead>
+        <tbody>
+          <tr>		<td>0</td>		<td></td>				<td>(Unknown)</td></tr>
+          <tr>		<td>1</td>		<td>APPEAR</td>			<td>Appear instantly, but only if hidden with hide_char</td></tr>
+          <tr>		<td>2</td>		<td>APPEAR_BLINK</td>	<td>Appear by slow blinking</td></tr>
+          <tr>		<td>3</td>		<td>APPEAR_HORZ</td>	<td>Appear by interlaced horizontal lines</td></tr>
+          <tr>		<td>4</td>		<td>APPEAR_VERT</td>	<td>Appear by interlaced vertical lines</td></tr>
+          <tr>		<td>5</td>		<td>APPEAR_SPRAY</td>	<td>Appear by random pixels</td></tr>
+          <tr>		<td>6</td>		<td></td>				<td>(Unknown)</td></tr>
+          <tr>		<td>7</td>		<td>APPEAR_FASTBLINK</td><td>Appear by fast blinking</td></tr>
+          <tr>		<td>8</td>		<td>VANISH_HORZ</td>	<td>Disappear by interlaced horizontal lines</td></tr>
+          <tr>		<td>9</td>		<td>VANISH_VERT</td>	<td>Disappear by interlaced vertical lines</td></tr>
+          <tr>		<td>10</td>		<td>VANISH_SPRAY</td>	<td>Disappear by random pixels</td></tr>
+        </tbody>
+      </table>
+
+    <h4>Example</h4>
+    <code>   <span class="comment">// Make Ness disappear with a "pencil eraser" effect, and stay hidden</span>
+   <span class="keyword1">show_char</span>(<span class="num">1</span>, VANISH_SPRAY)
+   <span class="keyword1">hide_char</span>(<span class="num">1</span>)
+
+   <span class="string">"@You can't see me!"</span> <span class="keyword1">next</span>
+
+   <span class="comment">// Make Ness visible again</span>
+   <span class="keyword1">show_char</span>(<span class="num">1</span>, APPEAR)</code>
+  </div>
+
+  <div class="desc">
+    <a name="c_show_party">
+      <code><span class="keyword1">show_party</span> (effect)</code>
+    </a>
+
+    <p>Visibility special effect for entire party.</p>
+
+    <h4>Parameters</h4>
+    <p><code>effect</code> - visibility transition effect to apply</p>
+
+    <h4>Description</h4>
+    <p>This command has the same effect as <code><a href="#c_show_char">show_char</a></code>, only applied
+    to the whole party. It is equivalent to calling <code><span class="keyword1">show_char</span>(<span class="num">0xFF</span>, effect)</code>.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_show_char_float">
+      <code><span class="keyword1">show_char_float</span> (char, float)</code>
+    </a>
+
+    <p>Create floating sprite next to character.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to create floating sprite for<br/>
+       <code>float</code> - index of the floating sprite to create</p>
+
+    <h4>Description</h4>
+    <p>Creates a small floating sprite next to the specified party member. </p>
+
+    <h4>Floating Sprites</h4>
+     <table>
+      <thead><tr><td>Index</td>	<td>ID</td>			<td>Description</td></tr></thead>
+      <tbody>
+        <tr>		<td>0</td>	<td></td>				<td>(Load index from argument register)</td></tr>
+        <tr>		<td>1</td>	<td>FLOAT_SURPISE</td>		<td>Three small lines above the character's head</td></tr>
+        <tr>		<td>2</td>	<td>FLOAT_RADIO</td>		<td>Small walkie-talkie sprite to the left of the character</td></tr>
+        <tr>		<td>3</td>	<td>FLOAT_EXCLAIM</td>		<td>Exclamation point thought bubble</td></tr>
+        <tr>		<td>4</td>	<td>FLOAT_BULB</td>			<td>Light bulb above the character's head</td></tr>
+        <tr>		<td>5</td>	<td>FLOAT_ZAP</td>			<td>Small lightning bolts above the character's head</td></tr>
+        <tr>		<td>6</td>	<td>FLOAT_FLAG</td>			<td>Flag sprite</td></tr>
+        <tr>		<td>7</td>	<td>FLOAT_DRUMMER1</td>		<td>Runaway Five drummer's head, to the left</td></tr>
+        <tr>		<td>8</td>	<td>FLOAT_DRUMMER2</td>		<td>Runaway Five drummer's head, to the right</td></tr>
+        <tr>		<td>9</td>	<td>FLOAT_HEART</td>		<td>Heart sprite</td></tr>
+        <tr>		<td>10</td>	<td>FLOAT_BUSGUY1</td>		<td>Bus driver's head, to the left</td></tr>
+        <tr>		<td>11</td>	<td>FLOAT_BUSGUY2</td>		<td>Bus driver's head, to the right</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_show_sprite_float">
+      <code><span class="keyword1">show_sprite_float</span> (tpt, float)</code>
+    </a>
+
+    <p>Create floating sprite next to TPT sprite.</p>
+
+    <h4>Parameters</h4>
+    <p><code>tpt</code> - TPT number of sprite to create floating sprite for<br/>
+       <code>float</code> - index of the floating sprite to create</p>
+
+    <h4>Description</h4>
+    <p>Creates a small floating sprite next to the specified TPT sprite. The TPT sprite must be
+    currently on screen, otherwise this command will crash horribly. This command uses the same
+    set of floating sprites as <code><a href="#c_show_char_float">show_char_float</a></code>.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_hide_char">
+      <code><span class="keyword1">hide_char</span> (char)</code>
+    </a>
+
+    <p>Make party member invisible.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to hide</p>
+
+    <h4>Description</h4>
+    <p>Makes a specified party member invisible. The effect will last until the party member is
+    specifically made visible again using <code><a href="#c_show_char">show_char</a></code> or
+    <code><a href="c_show_party">show_party</a></code>.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_hide_party">
+      <code><span class="keyword1">hide_party</span></code>
+    </a>
+
+    <p>Make party invisible.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Makes the whole party invisible. Equivalent to <code><a href="#c_hide_char">hide_char</a>(<span class="number">0xFF</span>)</code>.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_hide_sprite">
+      <code><span class="keyword1">hide_sprite</span> (tpt, effect)</code>
+    </a>
+
+    <p>Make a TPT sprite vanish.</p>
+
+    <h4>Parameters</h4>
+    <p><code>tpt</code> - TPT number of sprite to hide<br/>
+       <code>effect</code> - index of vanishing effect to use</p>
+
+    <h4>Description</h4>
+    <p>Makes a specified TPT sprite disappear. The TPT sprite must be on screen when this command
+    is executed, or the game will crash. For the effect, you can use the same values as in the
+    effects table for <code><a href="#c_show_char">show_char</a></code>, but note that even if you
+    use one of the "Appear" effects, the sprite will disappear at the end.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_hide_char_float">
+      <code><span class="keyword1">hide_char_float</span> (char)</code>
+    </a>
+
+    <p>Remove floating sprites from a party member.</p>
+
+    <h4>Parameters</h4>
+    <p><code>char</code> - party member to remove floating sprite from</p>
+
+    <h4>Description</h4>
+    <p>Removes all floating sprites from the specified party member. See
+    <code><a href="#c_show_char_float">show_char_float</a></code>.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_hide_sprite_float">
+      <code><span class="keyword1">hide_sprite_float</span> (tpt)</code>
+    </a>
+
+    <p>Remove floating sprites from a TPT sprite.</p>
+
+    <h4>Parameters</h4>
+    <p><code>tpt</code> - TPT number of sprite to remove floating sprites from</p>
+
+    <h4>Description</h4>
+    <p>Removes all floating sprites from the specified TPT entry. See
+    <code><a href="#c_show_sprite_float">show_sprite_float</a></code>.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+<h3><a name="2.9">2.9. Memory and advanced commands</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>Each window you open has three temporary storage values associated with it:
+  the argument register, the counter register, and the result register. </p>
+
+  <ul>
+  <li><strong>The argument register</strong> is used to pass "arguments" (parameters) to various
+  control codes. Some control codes, if one of their parameters is zero, will
+  use use the value in the argument register in place of that parameter.</li>
+  <li><strong>The counter register</strong> has very limited use; it can be initialized with a
+  value, copied to the argument register, or incremented. The ability to increment
+  the counter register makes it possible to build simple looping structures.</li>
+  <li><strong>The result register</strong> usually receives the result of a control code operation.
+  In CCScript, an <code><span class="keyword0">if</span></code> statement works
+  based on the value of the result register, so any command that modifies the
+  result register can be used as a condition in an
+  <code><span class="keyword0">if</span></code> statement.</li>
+  </ul>
+
+  <p>There is also space in each window's memory for a "storage" copy of each of these registers.
+  The commands in this section primarily relate to the use of these registers and their storage copies.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_input">input</a></code></td>		<td>Create a number selector.</td></tr>
+      <tr>	<td><code><a href="#c_arg">arg</a></code></td>			<td>Load a value into the argument register</td></tr>
+      <tr>	<td><code><a href="#c_arg_zero">arg_zero</a></code></td>			<td>Load zero into the argument register</td></tr>
+      <tr>	<td><code><a href="#c_counter">counter</a></code></td>	<td>Load a value into the counter register</td></tr>
+      <tr>	<td><code><a href="#c_counter_zero">counter_zero</a></code></td>	<td>Load zerp into the counter register</td></tr>
+      <tr>	<td><code><a href="#c_counter_is">counter_is</a></code></td>	<td>Compare counter register to value</td></tr>
+      <tr>	<td><code><a href="#c_inc">inc</a></code></td>			<td>Increment the counter register</td></tr>
+      <tr>	<td><code><a href="#c_swap">swap</a></code></td>		<td>Swap the contents of the argument and result registers</td></tr>
+      <tr>	<td><code><a href="#c_ctoarg">ctoarg</a></code></td>		<td>Copy counter to argument</td></tr>
+      <tr>	<td><code><a href="#c_rtoarg">rtoarg</a></code></td>		<td>Copy result to argument</td></tr>
+      <tr>	<td><code><a href="#c_result_is">result_is</a></code></td>	<td>Compare result register to value</td></tr>
+      <tr>	<td><code><a href="#c_result_not">result_not</a></code></td>	<td>Compare result register to value</td></tr>
+      <tr>	<td><code><a href="#c_store_registers">store_registers</a></code></td>	<td>Write window registers to storage</td></tr>
+      <tr>	<td><code><a href="#c_load_registers">load_registers</a></code></td>	<td>Read window registers from storage</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_input">
+      <code><span class="keyword1">input</span> (digits)</code>
+    </a>
+
+    <p>Create a number selector.</p>
+
+    <h4>Parameters</h4>
+    <p><code>digits</code> - number of digits in selector</p>
+
+    <h4>Description</h4>
+    <p>Creates a number input selector. The number the player enters is stored in both
+    the result register and the argument register of the current window.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="comment">// Create a 3-digit numeric input field</span>
+   <span class="keyword1">input</span>(<span class="num">3</span>)
+   <span class="string">"@You entered { number(0) }!"</span>
+   <span class="keyword1">end</span></code>
+  </div>
+
+  <div class="desc">
+    <a name="c_arg">
+      <code><span class="keyword1">arg</span> (value)</code>
+    </a>
+
+    <p>Load value into argument register.</p>
+
+    <h4>Parameters</h4>
+    <p><code>value</code> - value to put into argument register.</p>
+
+    <h4>Description</h4>
+    <p>Loads a byte value into the argument register for the current window. If
+    the parameter <code>value</code> is zero, the current value of the argument register
+    will be used - in other words, the argument register will not be changed. This
+    fact makes it tricky to guarantee a value of zero in the argument register; to do
+    this, use the command <code><a href="#c_arg_zero">arg_zero</a></code>.</p>
+    <p class="mystery">NOTE: executing this command overwrites the value of the counter register.</p>
+  </div>
+
+  <div class="desc">
+     <a name="c_arg_zero">
+       <code><span class="keyword1">arg_zero</span></code>
+     </a>
+
+     <p>Load zero into argument register.</p>
+
+     <h4>Parameters</h4>
+     <p>(None)</p>
+
+     <h4>Description</h4>
+     <p>Loads a zero value into the argument register. (Note: it currently does this by
+     comparing your cash on hand to 0xFFFFFFFF. If you figure out a way to have more than
+     four billion dollars on hand, this command might not work.)</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_counter">
+      <code><span class="keyword1">counter</span> (value)</code>
+    </a>
+
+    <p>Load value into counter register.</p>
+
+    <h4>Parameters</h4>
+    <p><code>value</code> - value to put into counter register.</p>
+
+    <h4>Description</h4>
+    <p>Loads a byte value into the counter register for the current window. If <code>value</code> is
+    zero, the value in the argument register will be used. This fact makes it tricky to simply put
+    a zero value into the counter register. To do that, use <code><a href="#c_counter_zero">counter_zero</a></code>.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_counter_zero">
+      <code><span class="keyword1">counter_zero</span></code>
+    </a>
+
+    <p>Load zero into counter register.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Loads a value of zero into the counter register.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_counter_is">
+      <code><span class="keyword1">counter_is</span> (value)</code>
+    </a>
+
+    <p>Compare the counter register to a value.</p>
+
+    <h4>Parameters</h4>
+    <p><code>value</code> - value to compare against counter register.</p>
+
+    <h4>Description</h4>
+    <p>Compares the value of the counter register to the specified value. Returns "true" if the values are
+    equal, "false" if they are not.</p>
+
+    <p class="mystery">NOTE: executing this command overwrites the value of the argument register.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_inc">
+      <code><span class="keyword1">inc</span></code>
+    </a>
+
+    <p>Increment counter.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Adds one to the value of the counter register for the current window. If the counter register's
+    value is 255 (0xFF), incrementing it will reset it to zero. The ability to increment the counter
+    register makes it possible to perform simple loops.</p>
+
+    <h4>Example</h4>
+    <code><span class="comment">// List all the item names.</span>
+<span class="keyword1">counter_zero</span>
+
+loop_start:
+   <span class="keyword0">if not</span> <span class="keyword1">counter_is</span>(<span class="num">254</span>)
+   {
+      <span class="keyword1">ctoarg</span>
+      <span class="string">"@{<span class="keyword1">itemname</span>(0)}"</span> <span class="keyword1">next</span>
+
+      <span class="keyword1">inc</span>   <span class="comment">// Increment the counter and continue the loop</span>
+      <span class="keyword1">goto</span>(loop_start)
+   }
+   <span class="string">"@Done with loop!"</span> <span class="keyword1">end</span></code>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_swap">
+      <code><span class="keyword1">swap</span></code>
+    </a>
+
+    <p>Swap result and argument.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Swaps the contents of the current window's argument and result registers.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_ctoarg">
+      <code><span class="keyword1">ctoarg</span></code>
+    </a>
+
+    <p>Copy counter to argument.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Copies the value of the current window's counter register into the current window's argument register.</p>
+  </div>
+
+
+
+  <div class="desc">
+    <a name="c_rtoarg">
+      <code><span class="keyword1">rtoarg</span></code>
+    </a>
+
+    <p>Copy result to argument.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Copies the value of the current window's result register into the current window's argument register.</p>
+  </div>
+
+
+  <div class="desc">
+    <a name="c_result_is">
+      <code><span class="keyword1">result_is</span> (value)</code>
+    </a>
+
+    <p>Compare result to value.</p>
+
+    <h4>Parameters</h4>
+    <p><code>value</code> - value to compare result to.</p>
+
+    <h4>Description</h4>
+    <p>Compares the contents of the result register to the given byte value. The result register is then set to
+    "true" if the values are the same, or "false" otherwise. This command can be used with an
+    <code><span class="keyword0">if</span></code> statement to branch based on the return value of any
+    command that modifies the result register.</p>
+
+    <p>Note that you can only compare against single-byte values, somewhat limiting the use of this command.</p>
+
+    <h4>Example</h4>
+    <code>   <span class="keyword1">input</span>(<span class="num">3</span>)
+   <span class="keyword0">if</span> <span class="keyword1">result_is</span>(<span class="num">100</span>) {
+      <span class="string">"@You entered 100!</span>
+   }</code>
+  </div>
+
+  <div class="desc">
+    <a name="c_result_not">
+      <code><span class="keyword1">result_not</span> (value)</code>
+    </a>
+
+    <p>Compare result to value.</p>
+
+    <h4>Parameters</h4>
+    <p><code>value</code> - value to compare result to.</p>
+
+    <h4>Description</h4>
+    <p>Like <code><a href="#c_result_is">result_is</a></code>, compares the result register to the given value,
+    but the return value is reversed: the result register is set to "false" if the values are equal, and to "true"
+    if they are not equal.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_store_registers">
+      <code><span class="keyword1">store_registers</span></code>
+    </a>
+
+    <p>Write active registers to storage.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Writes the active window's registers (result, argument, and counter) to the active window's storage, from
+    which they can be recovered later with <code><a href="#c_load_registers">load_registers</a></code>.
+    This is useful if you want to preserve the contents of the registers while performing some operation
+    that modifies them.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_load_registers">
+      <code><span class="keyword1">load_registers</span></code>
+    </a>
+
+    <p>Load active registers from storage.</p>
+
+    <h4>Parameters</h4>
+    <p>(None)</p>
+
+    <h4>Description</h4>
+    <p>Loads the active window's registers from the active window's storage.
+    See <code><a href="#c_store_registers">store_registers</a></code>.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+<h3><a name="2.A">2.10. ROM linkage commands</a></h3>
+
+<div class="section">
+  <div class="subsection">
+  <p>These commands directly modify parts of the ROM, to allow you to specify certain
+  options (such as the starting coordinates) or link parts of the ROM to text labels within your script.</p>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>	<td><code><a href="#c_sprite_link">sprite_link</a></code></td>			<td>Link text to a sprite</td></tr>
+      <tr>	<td><code><a href="#c_newgame_location">newgame_location</a></code></td><td>Change the starting coordinates</td></tr>
+      <tr>	<td><code><a href="#c_newgame_startup">newgame_startup</a></code></td>	<td>Change the flyover text pointer</td></tr>
+      <tr>	<td><code><a href="#c_setup_music">setup_music</a></code></td>			<td>Change the file select music</td></tr>
+      <tr>	<td><code><a href="#c_setup_music2">setup_music2</a></code></td>			<td>Change the character naming music</td></tr>
+      <tr>	<td><code><a href="#c_setup_background">setup_background</a></code></td><td>Change the file setup background</td></tr>
+      <tr>	<td><code><a href="#c_on_refresh">on_refresh</a></code></td>			<td>Set door refresh text</td></tr>
+      <tr>	<td><code><a href="#c_on_check">on_check</a></code></td>				<td>Set default "check" text</td></tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="desc">
+    <a name="c_sprite_link">
+      <code><span class="keyword1">sprite_link</span> (tpt, target)</code>
+    </a>
+
+    <p>Link text pointer to sprite.</p>
+
+    <h4>Parameters</h4>
+    <p><code>tpt</code> - TPT number of the sprite to link
+       <code>target</code> - target to link sprite to</p>
+
+    <h4>Description</h4>
+    <p>Links a sprite to a text address, so that talking to the sprite will display the desired text.
+    Generally, for <code>target</code> you specify a label somewhere within your script, though you
+    can also pass an absolute address. The TPT number of a sprite on the map can be found using the
+    map editor.</p>
+
+    <h4>Example</h4>
+    <code>fred:
+   <span class="string">"@Hi, my name is Fred!"</span> <span class="keyword1">end</span>
+
+<span class="keyword1">sprite_link</span>(<span class="num">42</span>, fred)  <span class="comment">// link sprite #42 to the label 'fred' </span>  </code>
+  </div>
+
+  <div class="desc">
+    <a name="c_newgame_location">
+      <code><span class="keyword1">newgame_location</span> (x, y)</code>
+    </a>
+
+    <p>Change the starting coordinates</p>
+
+    <h4>Parameters</h4>
+    <p><code>x</code> - x coordinate, in pixels<br/>
+       <code>y</code> - y coordinate, in pixels</p>
+
+    <h4>Description</h4>
+    <p>Changes the starting location of the game to the specified point. By default, the starting location is
+    the beginning of the first flyover sequence. If the game starts with a flyover, the starting location and
+    the beginning of the first flyover should be the same, otherwise graphical glitching might occur. So, if
+    you use this command, but you still want to use an intro flyover, be sure you edit the flyover appropriately
+    as well.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_newgame_startup">
+      <code><span class="keyword1">newgame_startup</span> (target)</code>
+    </a>
+
+    <p>Changes the starting flyover pointer.</p>
+
+    <h4>Parameters</h4>
+    <p><code>target</code> - location of the text to use at game startup</p>
+
+    <h4>Description</h4>
+    <p>Sets the startup text pointer. You can use this command to change the intro sequence of the game. The
+    default startup text begins the Onett flyover, so changing this pointer will also remove the default
+    flyover.</p>
+
+    <h4>Example</h4>
+    <code>init:
+   <span class="keyword1">window_open</span>(<span class="num">1</span>)
+   <span class="string">"@Welcome to my hack!"</span> <span class="keyword1">wait</span>
+   <span class="keyword1">window_closeall</span>
+   <span class="keyword1">eob</span>
+
+<span class="keyword1">newgame_startup</span>(init)</code>
+  </div>
+
+  <div class="desc">
+    <a name="c_setup_music">
+      <code><span class="keyword1">setup_music</span> (track)</code>
+    </a>
+
+    <p>Change the file select music.</p>
+
+    <h4>Parameters</h4>
+    <p><code>track</code> - music track to play at file select</p>
+
+    <h4>Description</h4>
+    <p>Changes the file select music to the specified track.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_setup_music2">
+      <code><span class="keyword1">setup_music2</span> (track)</code>
+    </a>
+
+    <p>Change the character naming music.</p>
+
+    <h4>Parameters</h4>
+    <p><code>track</code> - music track to play at naming screen</p>
+
+    <h4>Description</h4>
+    <p>Changes the character naming music to the specified track.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_setup_background">
+      <code><span class="keyword1">setup_background</span> (bg)</code>
+    </a>
+
+    <p>Change the background of the setup screen.</p>
+
+    <h4>Parameters</h4>
+    <p><code>bg</code> - index of the battle background to use</p>
+
+    <h4>Description</h4>
+    <p>Changes the background of the stup screen. The background of the setup screen is actually
+    one of EB's battle background animations, so any battle background can be used. Note, however,
+    that some battle backgrounds will appear in front of the file select windows, essentially
+    making the setup screen unusable. Experiment a little and you should find one that works.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_on_refresh">
+      <code><span class="keyword1">on_refresh</span> (target)</code>
+    </a>
+
+    <p>Change the door refresh pointer.</p>
+
+    <h4>Parameters</h4>
+    <p><code>target</code> - location of text to be used on entering a door</p>
+
+    <h4>Description</h4>
+    <p>Changes the text pointer that is called whenever the player walks through a door. The default
+    text entry checks the status of flag 0x12, and if it's set, generates a Buzz-Buzz sprite
+    flying around the player. In other words, all it does is make sure Buzz-Buzz is visible if he's
+    with you.</p>
+  </div>
+
+  <div class="desc">
+    <a name="c_on_check">
+      <code><span class="keyword1">on_check</span> (target)</code>
+    </a>
+
+    <p>Change the default "check" pointer.</p>
+
+    <h4>Parameters</h4>
+    <p><code>target</code> - location of text to be used</p>
+
+    <h4>Description</h4>
+    <p>Changes the default "check" pointer -- that is, the text pointer that is called whenever the
+    player uses the "Check" action on something that is not checkable. By default, this simply
+    says "No problem here."</p>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<h2><a name="3">3. Index</a></h2>
+
+<div class="section">
+
+  <p>
+    <a href="#3.A">A</a>
+    <a href="#3.B">B</a>
+    <a href="#3.C">C</a>
+    <a href="#3.D">D</a>
+    <a href="#3.E">E</a>
+    <a href="#3.F">F</a>
+    <a href="#3.G">G</a>
+    <a href="#3.H">H</a>
+    <a href="#3.I">I</a>
+    <a href="#3.J">J</a>
+    <a href="#3.K">K</a>
+    <a href="#3.L">L</a>
+    <a href="#3.M">M</a>
+    <a href="#3.N">N</a>
+    <a href="#3.O">O</a>
+    <a href="#3.P">P</a>
+    <a href="#3.Q">Q</a>
+    <a href="#3.R">R</a>
+    <a href="#3.S">S</a>
+    <a href="#3.T">T</a>
+    <a href="#3.U">U</a>
+    <a href="#3.V">V</a>
+    <a href="#3.W">W</a>
+    <a href="#3.X">X</a>
+    <a href="#3.Y">Y</a>
+    <a href="#3.Z">Z</a>
+  </p>
+
+  <div class="subsection">
+  <p></p>
+
+  <h2><a name="3.A">A</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr><td>Command</td>																<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_anchor_set">anchor_set</a></code></td>					<td>Set exit mouse anchor</td></tr>
+      <tr><td><code><a href="#c_anchor_warp">anchor_warp</a></code></td>				<td>Warp to exit mouse anchor</td></tr>
+      <tr><td><code><a href="#c_arg">arg</a></code></td>								<td>Load a value into the argument register</td></tr>
+      <tr><td><code><a href="#c_arg_zero">arg_zero</a></code></td>						<td>Load zero into the argument register</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.B">B</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_battle">battle</a></code></td>							<td>Begin a battle.</td></tr>
+      <tr><td><code><a href="#c_boost_exp">boost_exp</a></code></td>					<td>Give experience points.</td></tr>
+      <tr><td><code><a href="#c_boost_iq">boost_iq</a></code></td>						<td>Increase IQ.</td></tr>
+      <tr><td><code><a href="#c_boost_guts">boost_guts</a></code></td>					<td>Increase Guts.</td></tr>
+      <tr><td><code><a href="#c_boost_luck">boost_luck</a></code></td>					<td>Increase Luck.</td></tr>
+      <tr><td><code><a href="#c_boost_speed">boost_speed</a></code></td>				<td>Increase Speed.</td></tr>
+      <tr><td><code><a href="#c_boost_vitality">boost_vitality</a></code></td>			<td>Increase Vitality.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.C">C</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_call">call</a></code></td>								<td>Jump to other text and return.</td></tr>
+      <tr><td><code><a href="#c_char_direction">char_direction</a></code></td>			<td>Change character's direction</td></tr>
+      <tr><td><code><a href="#c_change_level">change_level</a></code></td>				<td>Change character level.</td></tr>
+      <tr><td><code><a href="#c_clearline">clearline</a></code></td>					<td>Erase current text line.</td></tr>
+      <tr><td><code><a href="#c_consumepp">consumepp</a></code></td>					<td>Consume PP.</td></tr>
+      <tr><td><code><a href="#c_consumepp_percent">consumepp_percent</a></code></td>	<td>Consume PP by percentage.</td></tr>
+      <tr><td><code><a href="#c_counter">counter</a></code></td>						<td>Load a value into the counter register</td></tr>
+      <tr><td><code><a href="#c_counter_is">counter_is</a></code></td>					<td>Compare counter register to value</td></tr>
+      <tr><td><code><a href="#c_counter_zero">counter_zero</a></code></td>				<td>Load zerp into the counter register</td></tr>
+      <tr><td><code><a href="#c_ctoarg">ctoarg</a></code></td>							<td>Copy counter to argument</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.D">D</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_delta">delta</a></code></td>							<td>Display action delta.</td></tr>
+      <tr><td><code><a href="#c_deposit">deposit</a></code></td>						<td>Add money to the ATM account</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.E">E</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_end">end</a></code></td>								<td>Prompt with end-of-block.</td></tr>
+      <tr><td><code><a href="#c_eob">eob</a></code></td>								<td>End-of-block marker.</td></tr>
+      <tr><td><code><a href="#c_event">event</a></code></td>							<td>Cut to a special event sequence</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.F">F</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_font_normal">font_normal</a></code></td>				<td>Use the normal font.</td></tr>
+      <tr><td><code><a href="#c_font_saturn">font_saturn</a></code></td>				<td>Use the Mr. Saturn font</td></tr>
+      <tr><td><code><a href="#c_full">full</a></code></td>								<td>Check if a character's inventory is full</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.G">G</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_give">give</a></code></td>								<td>Give an item to a character</td></tr>
+      <tr><td><code><a href="#c_givemoney">givemoney</a></code></td>					<td>Give money to the player</td></tr>
+      <tr><td><code><a href="#c_goto">goto</a></code></td>								<td>Jump to other text without return.</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.H">H</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_hasitem">hasitem</a></code></td>						<td>Check if a character has an item</td></tr>
+      <tr><td><code><a href="#c_hasmoney">hasmoney</a></code></td>						<td>Check if the player has an amount of money</td></tr>
+      <tr><td><code><a href="#c_heal">heal</a></code></td>								<td>Heal HP.</td></tr>
+      <tr><td><code><a href="#c_heal_percent">heal_percent</a></code></td>				<td>Heal HP by percentage.</td></tr>
+      <tr><td><code><a href="#c_healall">healall</a></code></td>						<td>Revitalize all party members.</td></tr>
+      <tr><td><code><a href="#c_hide_char">hide_char</a></code></td>					<td>Make party member invisible</td></tr>
+      <tr><td><code><a href="#c_hide_char_float">hide_char_float</a></code></td>		<td>Remove party member's floating sprite</td></tr>
+      <tr><td><code><a href="#c_hide_party">hide_party</a></code></td>					<td>Make party invisible</td></tr>
+      <tr><td><code><a href="#c_hide_sprite">hide_sprite</a></code></td>				<td>Make a TPT sprite vanish</td></tr>
+      <tr><td><code><a href="#c_hide_sprite_float">hide_sprite_float</a></code></td>	<td>Remove TPT sprite's floating sprite</td></tr>
+      <tr><td><code><a href="#c_hurt">hurt</a></code></td>								<td>Damage HP.</td></tr>
+      <tr><td><code><a href="#c_hurt_percent">hurt_percent</a></code></td>				<td>Damage HP by percentage.</td></tr>
+      <tr><td><code><a href="#c_hotspot_on">hotspot_on</a></code></td>					<td>Activate a hotspot</td></tr>
+      <tr><td><code><a href="#c_hotspot_off">hotspot_off</a></code></td>				<td>Deactivate a hotspot</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.I">I</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_inc">inc</a></code></td>								<td>Increment the counter register</td></tr>
+      <tr><td><code><a href="#c_inflict">inflict</a></code></td>						<td>Inflict a status change.</td></tr>
+      <tr><td><code><a href="#c_input">input</a></code></td>							<td>Create a number selector.</td></tr>
+      <tr><td><code><a href="#c_itemname">itemname</a></code></td>						<td>Print item names.</td></tr>
+    </tbody>
+  </table>
+
+
+  <h2><a name="3.J">J</a></h2>
+
+  <h2><a name="3.K">K</a></h2>
+
+  <h2><a name="3.L">L</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_learnpsi">learnpsi</a></code></td>						<td>Learn a PSI technique</td></tr>
+      <tr><td><code><a href="#c_load_registers">load_registers</a></code></td>			<td>Read window registers from storage</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.M">M</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_money">money</a></code></td>							<td>Print right-aligned money value.</td></tr>
+      <tr><td><code><a href="#c_music">music</a></code></td>							<td>Play a music track.</td></tr>
+      <tr><td><code><a href="#c_music_effect">music_effect</a></code></td>				<td>Apply music effect.</td></tr>
+      <tr><td><code><a href="#c_music_resume">music_resume</a></code></td>				<td>Resume playing music.</td></tr>
+      <tr><td><code><a href="#c_music_stop">music_stop</a></code></td>					<td>Stop all music.</td></tr>
+      <tr><td><code><a href="#c_music_switching_off">music_switching_off</a></code></td><td>Disable map music switching.</td></tr>
+      <tr><td><code><a href="#c_music_switching_on">music_switching_on</a></code></td>	<td>Enable map music switching.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.N">N</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_name">name</a></code></td>								<td>Print character names.</td></tr>
+      <tr><td><code><a href="#c_newgame_location">newgame_location</a></code></td>		<td>Change the starting coordinates</td></tr>
+      <tr><td><code><a href="#c_newgame_startup">newgame_startup</a></code></td>		<td>Change the flyover text pointer</td></tr>
+      <tr><td><code><a href="#c_newline">newline</a></code></td>						<td>Break to a new line.</td></tr>
+      <tr><td><code><a href="#c_next">next</a></code></td>								<td>Prompt with nextline.</td></tr>
+      <tr><td><code><a href="#c_number">number</a></code></td>							<td>Print numeric value.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.O">O</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_on_refresh">on_refresh</a></code></td>					<td>Set door refresh text</td></tr>
+      <tr><td><code><a href="#c_on_check">on_check</a></code></td>						<td>Set default "check" text</td></tr>
+      <tr><td><code><a href="#c_open_wallet">open_wallet</a></code></td>				<td>Open the wallet window.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.P">P</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_party_add">party_add</a></code></td>					<td>Add a party member</td></tr>
+      <tr><td><code><a href="#c_pause">pause</a></code></td>							<td>Pause for an amount of time.</td></tr>
+      <tr><td><code><a href="#c_party_remove">party_remove</a></code></td>				<td>Remove a party member</td></tr>
+      <tr><td><code><a href="#c_prompt">prompt</a></code></td>							<td>Wait for input with prompt.</td></tr>
+      <tr><td><code><a href="#c_psiname">psiname</a></code></td>						<td>Print PSI power names.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.Q">Q</a></h2>
+
+  <h2><a name="3.R">R</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_recoverpp">recoverpp</a></code></td>					<td>Recover PP.</td></tr>
+      <tr><td><code><a href="#c_recoverpp_percent">recoverpp_percent</a></code></td>	<td>Recover PP by percentage.</td></tr>
+      <tr><td><code><a href="#c_result_is">result_is</a></code></td>					<td>Compare result register to value</td></tr>
+      <tr><td><code><a href="#c_result_not">result_not</a></code></td>					<td>Compare result register to value</td></tr>
+      <tr><td><code><a href="#c_rtoarg">rtoarg</a></code></td>							<td>Copy result to argument</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.S">S</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_save">save</a></code></td>								<td>Save the game</td></tr>
+      <tr><td><code><a href="#c_set">set</a></code></td>								<td>Set an event flag.</td></tr>
+      <tr><td><code><a href="#c_setup_music">setup_music</a></code></td>				<td>Change the file select music</td></tr>
+      <tr><td><code><a href="#c_setup_music2">setup_music2</a></code></td>				<td>Change the character naming music</td></tr>
+      <tr><td><code><a href="#c_setup_background">setup_background</a></code></td>		<td>Change the file setup background</td></tr>
+      <tr><td><code><a href="#c_show_char">show_char</a></code></td>					<td>Visibility effect for party member</td></tr>
+      <tr><td><code><a href="#c_show_char_float">show_char_float</a></code></td>		<td>Create floating sprite next to party member</td></tr>
+      <tr><td><code><a href="#c_show_party">show_party</a></code></td>					<td>Visibility effect for party</td></tr>
+      <tr><td><code><a href="#c_show_sprite_float">show_sprite_float</a></code></td>	<td>Create floating sprite next to TPT sprite</td></tr>
+      <tr><td><code><a href="#c_smash">smash</a></code></td>							<td>Display "SMAAAASH"</td></tr>
+      <tr><td><code><a href="#c_sound">sound</a></code></td>							<td>Play a sound effect.</td></tr>
+      <tr><td><code><a href="#c_sprite_direction">sprite_direction</a></code></td>		<td>Change sprite's direction</td></tr>
+      <tr><td><code><a href="#c_sprite_link">sprite_link</a></code></td>				<td>Link text to a sprite</td></tr>
+      <tr><td><code><a href="#c_stat">stat</a></code></td>								<td>Display various statistics.</td></tr>
+      <tr><td><code><a href="#c_store_registers">store_registers</a></code></td>		<td>Write window registers to storage</td></tr>
+      <tr><td><code><a href="#c_swap">swap</a></code></td>								<td>Swap the contents of the argument and result registers</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.T">T</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_take">take</a></code></td>								<td>Take an item from a character</td></tr>
+      <tr><td><code><a href="#c_takemoney">takemoney</a></code></td>					<td>Take money from the player</td></tr>
+      <tr><td><code><a href="#c_target">target</a></code></td>							<td>Display action target.</td></tr>
+      <tr><td><code><a href="#c_teleport">teleport</a></code></td>						<td>Use PSI Teleport</td></tr>
+      <tr><td><code><a href="#c_teleportname">teleportname</a></code></td>				<td>Print teleport names.</td></tr>
+      <tr><td><code><a href="#c_text_pos">text_pos</a></code></td>						<td>Force text positioning.</td></tr>
+      <tr><td><code><a href="#c_text_color">text_color</a></code></td>					<td>Change text color.</td></tr>
+      <tr><td><code><a href="#c_text_blips">text_blips</a></code></td>					<td>Change text "blip" sounds.</td></tr>
+      <tr><td><code><a href="#c_toggle">toggle</a></code></td>							<td>Toggle the state of an event flag.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.U">U</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_unset">unset</a></code></td>							<td>Unset an event flag.</td></tr>
+      <tr><td><code><a href="#c_usable">usable</a></code></td>							<td>Check if a character can use an item</td></tr>
+      <tr><td><code><a href="#c_user">user</a></code></td>								<td>Display action user.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.V">V</a></h2>
+
+  <h2><a name="3.W">W</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_wait">wait</a></code></td>								<td>Wait for input, no prompt.</td></tr>
+      <tr><td><code><a href="#c_warp">warp</a></code></td>								<td>Warp to a destination</td></tr>
+      <tr><td><code><a href="#c_window_close">window_close</a></code></td>				<td>Close a specific window.</td></tr>
+      <tr><td><code><a href="#c_window_closeall">window_closeall</a></code></td>		<td>Close all text windows.</td></tr>
+      <tr><td><code><a href="#c_window_closetop">window_closetop</a></code></td>		<td>Close the current window.</td></tr>
+      <tr><td><code><a href="#c_window_open">window_open</a></code></td>				<td>Open a window.</td></tr>
+      <tr><td><code><a href="#c_window_switch">window_switch</a></code></td>			<td>Switch to an already open window.</td></tr>
+      <tr><td><code><a href="#c_withdraw">withdraw</a></code></td>						<td>Remove money from the ATM account</td></tr>
+    </tbody>
+  </table>
+
+  <h2><a name="3.X">X</a></h2>
+
+  <h2><a name="3.Y">Y</a></h2>
+  <table class="sectiontoc">
+    <thead>
+      <tr>	<td>Command</td>				<td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr><td><code><a href="#c_youwon">youwon</a></code></td>							<td>Display "YOU WON"</td></tr>
+
+
+    </tbody>
+  </table>
+
+  <h2><a name="3.Z">Z</a></h2>
+  </div>
+
+</div>
+
+
+
+
+
+</body>
+</html>

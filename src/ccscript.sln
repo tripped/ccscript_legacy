@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccscript", "ccscript.vcproj", "{99E58806-415B-4BF1-A251-0B582E0B7EE9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\src\tests.vcproj", "{CBDCF23F-C56B-4739-BFAB-D1B506EC1F42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99E58806-415B-4BF1-A251-0B582E0B7EE9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{99E58806-415B-4BF1-A251-0B582E0B7EE9}.Debug|Win32.Build.0 = Debug|Win32
+		{99E58806-415B-4BF1-A251-0B582E0B7EE9}.Release|Win32.ActiveCfg = Release|Win32
+		{99E58806-415B-4BF1-A251-0B582E0B7EE9}.Release|Win32.Build.0 = Release|Win32
+		{CBDCF23F-C56B-4739-BFAB-D1B506EC1F42}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CBDCF23F-C56B-4739-BFAB-D1B506EC1F42}.Debug|Win32.Build.0 = Debug|Win32
+		{CBDCF23F-C56B-4739-BFAB-D1B506EC1F42}.Release|Win32.ActiveCfg = Release|Win32
+		{CBDCF23F-C56B-4739-BFAB-D1B506EC1F42}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

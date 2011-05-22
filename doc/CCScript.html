@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+<head>
+  <title>CCScript 1.0 Language Reference</title>
+  <link rel="stylesheet" href="res/basic.css"/>
+
+  <style type="text/css">
+  /* these should probably be merged into the common stylesheet */
+  div.toc li {
+    font-family: Verdana; font-size: 80%;
+  }
+
+  div.toc li li {
+    margin-left:-1.5em;
+    font-size:100%;
+  }
+
+  div.toc li li li {
+    margin-left:-2em;
+    list-style-type: none
+  }
+
+  h3
+  {
+    margin-left: 0.5em;
+    border-bottom: 1px solid #5555CC;
+  }
+
+  div.section
+   { margin-left: 2em; }
+  h4
+  {
+    font-size: 110%;
+    max-width:20em;
+    border:1px dotted #BBBBBB;
+    padding:0.1em;
+    margin-left: -1em;
+    margin-top:2em;
+  }
+  h5
+  {
+    font-size:100%;
+  }
+  h5+p
+  {
+    margin-top:-1.5em;
+  }
+  </style>
+</head>
+
+<body>
+<h1>CCScript 1.0 Language Reference</h1>
+
+<div class="toc">
+  <h2>Table of contents</h2>
+
+  <ol>
+    <li><a href="#1">Introduction</a>
+      <ol>
+        <li><a href="#1.1">What is CCScript?</a></li>
+        <li><a href="#1.2">CCScript modules</a></li>
+        <li><a href="#1.3">Modules and scopes</a></li>
+      </ol>
+    </li>
+
+    <li><a href="#2">The Language</a>
+      <ol>
+        <li><a href="#2.1">Lexical structure</a>
+          <ul>
+            <li><a href="#2.1.1">Whitespace</a></li>
+            <li><a href="#2.1.2">Identifiers</a></li>
+            <li><a href="#2.1.3">Keywords</a></li>
+            <li><a href="#2.1.4">Operators and other tokens</a></li>
+            <li><a href="#2.1.5">Numbers and strings</a></li>
+            <li><a href="#2.1.6">Comments</a></li>
+          </ul>
+        </li>
+        <li><a href="#2.2">Values and Types</a>
+          <ul>
+            <li><a href="#2.2.1">Number</a></li>
+            <li><a href="#2.2.2">String</a></li>
+            <li><a href="#2.2.3">Boolean</a></li>
+          </ul>
+        </li>
+        <li><a href="#2.3">Statements</a>
+          <ul>
+
+            <li><a href="#2.3.1">Block statement</a></li>
+            <li><a href="#2.3.2">If statement</a></li>
+            <li><a href="#2.3.3">Menu statement</a></li>
+            <li><a href="#2.3.4">Label definition</a></li>
+            <li><a href="#2.3.5">Constant definition</a></li>
+            <li><a href="#2.3.6">Command definition</a></li>
+            <li><a href="#2.3.7">ROM write statement</a></li>
+            <li><a href="#2.3.8">Expression statement</a></li>
+          </ul>
+        </li>
+        <li><a href="#2.4">Expressions</a>
+          <ul>
+            <li><a href="#2.4.1">String expressions</a></li>
+            <li><a href="#2.4.2">Numeric expressions</a></li>
+            <li><a href="#2.4.3">Boolean operators</a></li>
+            <li><a href="#2.4.4">Flag operator</a></li>
+            <li><a href="#2.4.5">Identifier expressions</a></li>
+            <li><a href="#2.4.6">Command invocations</a></li>
+            <li><a href="#2.4.7">Array access expressions</a></li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li><a href="#3">Future revisions</a></li>
+
+    <li><a href="#4">Standard library</a></li>
+
+  </ol>
+</div>
+
+<hr/>
+
+
+<h2><a name="1">1. Introduction</a></h2>
+
+
+<h3><a name="1.1">1.1. What is CCScript?</a></h3>
+
+<div class="section">
+   <p>
+   CCScript is a simple scripting language designed to provide a higher-level representation of text and
+   control codes in the Super Nintendo game <i>EarthBound</i>. It provides text output, labelling, and
+   referencing, as well as control structures, boolean expressions, and macro-like command definitions.
+   </p>
+</div>
+
+
+<h3><a name="1.2">1.2. CCScript modules</a></h3>
+
+<div class="section">
+  <p>
+  CCScript code is contained in text files, usually with the file extension ".ccs". A CCScript file is
+  also called a "module." A collection of CCScript modules compiled together is called a CCScript "project."
+  It's usually a good idea to break up a project into multiple CCScript files for convenience and improved
+  organization. It's much easier to work on your project if it is broken down into major components, each
+  of which is in its own text file. This way the individual files are smaller and easier to navigate, and
+  each one is (hopefully) focused on a single purpose or area of a script.
+  </p>
+
+  <p>Using multiple modules is also desirable since, in the current version of the compiler, each module
+  is limited to a compiled size of 64 kilobytes. This is due to the fact that a single text block cannot
+  cross a bank boundary in the ROM, and I'm too lazy to add logic to the compiler to divide a module
+  correctly across multiple banks. :-)</p>
+</div>
+
+<h3><a name="1.3">1.3. Modules and scopes</a></h3>
+
+<div class="section">
+  <p>
+  In CCScript, every script file in a project has its own scope; that is, the symbols defined in one
+  CCScript module are not immediately visible to other modules. However, it is possible for code in
+  one module to refer to identifiers in another module, by simply prefixing the name of the identifier
+  with the name of the module that contains it, separated by a period.
+  </p>
+
+  <p>This code, for example, refers to identifiers contained in other modules:</p>
+
+  <code>   <span class="keyword1">goto</span>(onett.somelabel)
+
+   <span class="keyword0">if</span> twoson.someflag {
+      <span class="string">"@Something has happened in Twoson!"</span>
+   }
+
+   <span class="string">"@Did you hear about that new inventor in Threed?"</span> <span class="keyword1">next</span>
+   <span class="string">"@I think his name was {threed.inventor_name}."</span> <span class="keyword1">end</span></code>
+
+   <p>For information on the meaning of this code, see the sections on <a href="#2.4.5">Identifier expressions</a> and
+   <a href="#2.4.6">Command invocations</a>, as well as the rest of the documentation on Statements and Expressions.</p>
+
+   <h4><a name="2.5.1">Module names</a></h4>
+
+   <p>The CCScript compiler assigns a name to every module in a project. That name is taken directly
+   from the filename of the module file, without the file extension. So if a project consists of
+   the following files:</p>
+
+   <pre>   onett.ccs
+   twoson.ccs
+   threed.ccs
+   commands.ccs</pre>
+
+   <p>...then the project will contain modules named <code>onett</code>, <code>twoson</code>,
+   <code>threed</code>, and <code>commands</code>. Note that this places some restrictions on the
+   filenames of modules used with the CCScript compiler:</p>
+
+   <ul>
+     <li>Filenames must be unique - two module files with the same name cannot be part
+     of the same project, even if they are located in different directories, or if they
+     have different file extensions. For example, <code>myfile.ccs</code> and
+     <code>somedir/myfile.ccs2</code> cannot be in the same project.</li>
+     <li>A module's filename cannot be a reserved CCScript keyword. <code>flag.ccs</code>,
+     <code>command.ccs</code>, and <code>default.ccs</code> are invalid filenames for modules.</li>
+   </ul>
+</div>
+
+
+
+<h2><a name="2">2. The Language</a></h2>
+
+
+<h3><a name="2.1">2.1. Lexical structure</a></h3>
+
+<div class="section">
+
+  <h4><a name="2.1.1">Whitespace</a></h4>
+
+  <p>In CCScript, whitespace (tab characters and spaces) is only used to separate lexemes; it has
+  no other purpose. Thus, programmers have a great deal of flexibility in formatting their code.
+  Multiple statements may be placed on the same line, or single statements may have their lexemes
+  separated over multiple lines.</p>
+
+  <p>While the language itself allows any style of whitespace formatting, as a general guideline
+  it is best to use whitespace to improve the readability of code. Simple techniques such as indenting
+  nested blocks and using blank lines to separate sections of code can go a long way towards making
+  programs easier to read.</p>
+
+  <h4><a name="2.1.2">Identifiers</a></h4>
+
+  <p>An identifier in CCScript consists of any number of letters, numbers, or underscore characters,
+  and must begin with a letter or an underscore. Identifiers in CCScript are case-sensitive, so
+  <code>foobar</code>, <code>Foobar</code>, and <code>FOOBAR</code> are all different identifiers.</p>
+
+  <code class="grammar">identifier <span class="op">:=</span> [a-zA-Z_]([a-zA-Z_0-9])*</code>
+
+  <h4><a name="2.1.3">Keywords</a></h4>
+  <p>The following keywords have special meanings in CCScript, and cannot be used as identifiers:
+  </p>
+
+  <code>  <span class="keyword0">and       byte        command     default
+  define    else        flag        if
+  long      menu        not         or
+  ROM       ROMTBL      short</span></code>
+
+
+  <h4><a name="2.1.4">Operators and other tokens</a></h4>
+
+  <p>CCScript currently supports only a few operators, including the boolean logical operators
+  <code><span class="keyword0">and</span></code>, <code><span class="keyword0">or</span></code>,
+  and <code><span class="keyword0">not</span></code>. It also includes the assignment operator
+  <code>=</code>, but currently only as part of a <code><span class="keyword0">ROM</span></code>
+  or <code><span class="keyword0">ROMTBL</span></code> statement. The following symbols are the
+  non-alphanumeric tokens used in the language:</p>
+
+  <code>{ } [ ] ( ) : . , =</code>
+
+
+  <h4><a name="2.1.5">Numbers and strings</a></h4>
+
+  <p>CCScript accepts both string literals and positive integer literals. Integer literals may
+  be in decimal (with no prefix), or in hexadecimal (with the prefix '0x').</p>
+
+  <code>   <span class="num">125</span>               <span class="comment">// decimal integer</span>
+   <span class="num">0x2F</span>              <span class="comment">// hexadecimal integer</span>
+   <span class="string">"Hello."</span>          <span class="comment">// text string</span></code>
+
+  <code class="grammar">   intliteral := [0-9]+ | '0x' [0-9A-Fa-F]+
+   stringliteral := '"'[.]*'"' </code>
+
+
+  <h4><a name="2.1.6">Comments</a></h4>
+
+  <p>Comments are sections of text that are ignored by the compiler. They do not affect the output
+  of the program, but they are useful for explaining or otherwise annotating code. CCScript supports
+  two kinds of comments, which will be familiar to anyone who uses languages like C++ and Java.</p>
+
+  <p><em>Single-line comments</em> begin with <code>//</code> (two slash characters). Anything from the
+  start of the two slashes to the end of the current line is part of the comment:</p>
+
+  <code>   <span class="comment">// This is a single-line comment.</span>
+   <span class="keyword1">hotspot_on</span>(<span class="num">1</span>, <span class="num">42</span>, target)   <span class="comment">// This, too!</span></code>
+
+  <p><em>Multi-line</em> comments begin with <code>/*</code> (slash, asterisk), and end with <code>*/</code>
+  (asterisk, slash). Everything from the first slash to the last slash is part of the comment, and this
+  can include multiple lines of text:</p>
+
+  <code>   <span class="comment">/* This is a multi-line comment.
+      Second line of the comment.
+      Third line of the comment. */</span></code>
+</div>
+
+
+
+
+
+<h3><a name="2.2">2.2. Values and Types</a></h3>
+
+<div class="section">
+  <p>CCScript is a fairly primitive language when it comes to types - it has no variables, so the concept
+  of types is of limited use. In fact, every expression in CCScript ultimately has the same type: an array
+  of bytes. Thus all types are directly convertible to one another; wherever one expression is allowed,
+  <em>any</em> expression is allowed. (Though not always useful.)</p>
+
+  <p>There are, however, different types of expressions, and each is coerced into its final byte array form
+  in a different way, so it is still useful to mention them here.</p>
+
+  <h4><a name="2.2.1">Numbers</a></h4>
+
+  <p>A number in CCScript is always an unsigned 32-bit (4 byte) integer, representing possible values from
+  0 to 0xFFFFFFFF (4,294,967,295).</p>
+
+  <h4><a name="2.2.2">Strings</a></h4>
+
+  <p>A string is essentially just an array of bytes, with each byte representing a character. However,
+  strings can also contain special character sequences that are evaluated differently. See
+  <a href="#2.4.1">String expressions</a> for more information.</p>
+
+  <h4><a name="2.2.3">Booleans</a></h4>
+
+  <p>Conceptually, an expression of the boolean type can have one of two values: "true" or "false."
+  The concept is rather loosely treated in CCScript however; any expression can be treated like
+  a boolean. The value of a boolean (true or false) comes from examining the result of the EB text
+  system's results register after the expression has been parsed in text; a value of zero corresponds
+  to "false," and any other value corresponds to "true."</p>
+</div>
+
+
+
+<h3><a name="2.3">2.3. Statements</a></h3>
+
+<div class="section">
+  <p><em>Statements</em> are the building blocks of a program. A program in CCScript consists of
+  a series of statements:</p>
+
+  <code class="grammar">   program <span class="op">:=</span> (statement)*</code>
+
+  <p>There are several different types of statements, each of which is described in detail
+  in the following sections.</p>
+
+
+  <h4><a name="2.3.1">Block statement</a></h4>
+
+  <code class="grammar">   block-stmt <span class="op">:=</span> '{' (statement)* '}'</code>
+
+  <p>A block statement is simply an arbitrary number of statements contained inside curly braces.
+  Block statements are useful for grouping together multiple statements under an
+  <code><span class="keyword0">if</span></code> or <code><span class="keyword0">menu</span></code>
+  statement. Unlike in some other languages, blocks in CCScript do not define new scopes; it is also
+  not allowed to use constant definitions or command definitions inside blocks.</p>
+
+  <h4><a name="2.3.2">If statement</a></h4>
+
+  <code class="grammar">   if-stmt <span class="op">:=</span> 'if' expression statement ['else' statement]</code>
+
+  <p>The <code><span class="keyword0">if</span></code> statement is the primary method of controlling
+  the flow of events in a script. The expression after the <code><span class="keyword0">if</span></code>
+  keyword is evaluated, and if the result is "true," the statement following the condition will be executed.
+  Otherwise, the statement following the <code><span class="keyword0">else</span></code> keyword will
+  be executed. The <code><span class="keyword0">else</span></code> clause is optional.</p>
+
+  <p>Examples:</p>
+
+  <code>   <span class="comment">// Example 1</span>
+   <span class="keyword0">if</span> <span class="keyword0">flag</span> <span class="num">2</span>
+      <span class="string">"@The temporary flag is set."</span>
+
+   <span class="comment">// Example 2</span>
+   <span class="keyword0">if</span> <span class="keyword1">hasmoney</span>(<span class="num">5000</span>) {
+      <span class="string">"@That's a good bit of cash there."</span> <span class="keyword1">next</span>
+      <span class="string">"@Want to buy a genuine Rolex?"</span> <span class="keyword1">end</span>
+   }
+   <span class="keyword0">else</span> {
+      <span class="string">"@Get outta here, cheapskate!"</span>
+      <span class="keyword1">end</span>
+   }</code>
+
+  <p>Note that if you want multiple statements to be controlled by an <code><span class="keyword0">if</span></code>
+  statement, you must put them inside a single block statement. As a general rule, it is best to <em>always</em> use
+  curly braces with <code><span class="keyword0">if</span></code> statements; this reduces the possibility
+  of potentially confusing mistakes.</p>
+
+  <h4><a name="2.3.3">Menu statement</a></h4>
+
+  <code class="grammar">   menu-stmt <span class="op">:=</span> 'menu' [intliteral] '{' ( ['default'] expression ':' statement)* '}' </code>
+
+  <p>The <code><span class="keyword0">menu</span></code> statement allows you to provide the player with
+  a selection of options, such that their choice influences the flow of events in the script.
+  Syntactically, a menu consists of the <code><span class="keyword0">menu</span></code> keyword,
+  optionally followed by a number, followed by a series of options. Each option consists of an optional
+  <code><span class="keyword0">default</span></code> keyword, and expression
+  that defines how the choice will be displayed, a colon character (':'), and a statement that will be
+  executed if that choice is selected.</p>
+
+  <p>The optional number after the <code><span class="keyword0">menu</span></code> keyword specifies
+  how many columns to display the choices in. The <code><span class="keyword0">default</span></code>
+  keyword, when placed before an option, indicates that that option will be selected by default if the
+  player presses "B" to cancel the menu, instead of selecting an option.</p>
+
+  <p>Examples:</p>
+
+  <code>   <span class="comment">// Example 1: display a basic yes-no menu</span>
+   <span class="string">"@Would you like ketchup with that?"</span> <span class="keyword1">next</span>
+   <span class="keyword0">menu</span> {
+      <span class="string">"Yes"</span>: <span class="string">"@Sorry, we're all out of ketchup."</span>
+      <span class="keyword0">default</span> <span class="string">"No"</span>: <span class="string">"@Sorry, we're all out of not-ketchup."</span>
+   }
+   <span class="keyword1">end</span>
+
+   <span class="comment">// Example 2: display a longer menu, in one column</span>
+   <span class="string">"@What is your favorite ice cream flavor?"</span> <span class="keyword1">next</span>
+   <span class="keyword0">menu</span> 1 {
+      <span class="string">"Vanilla"</span>:
+         <span class="keyword1">goto</span>(vanilla)
+
+      <span class="string">"Strawberry"</span>:
+         <span class="keyword1">goto</span>(strawberry)
+
+      <span class="string">"Chocolate"</span>:
+         <span class="keyword1">goto</span>(chocolate)
+
+      <span class="string">"I don't like ice cream"</span>: {
+         <span class="string">"@That is unacceptable!"</span> <span class="keyword1">next</span>
+         <span class="string">"@You die now!"</span> <span class="keyword1">next</span>
+         <span class="keyword1">battle</span>(<span class="num">39</span>)
+      }
+   }</code>
+
+  <p>Note that, as with the <code><span class="keyword0">if</span></code> statement, if you want
+  an option to control more than one statement, you must collect them together within a block statement
+  (curly braces).</p>
+
+  <h4><a name="2.3.4">Label definition</a></h4>
+
+  <code class="grammar">   label-stmt <span class="op">:=</span> identifier ':'</code>
+
+  <p>A label is a named location in code that can be referred to elsewhere in code. Defining
+  a label allows you to refer to the address of that location in the script.
+  Labels are primarily used for text jumps, or to link the address of a text block to some part of the ROM.</p>
+
+  <code>mylabel:
+   <span class="string">"@The label 'mylabel' points to this text."</span></code>
+
+  <p>The address of a label always points to the first <em>non-definition</em> statement that follows
+  the label definition. Definition statements (labels, commands, constants) merely declare symbols that
+  can be used by the rest of the program, so they do not themselves have any "position" within the code.</p>
+
+  <p>Label definitions are not allowed in the body of a command definition. A label defined in one CCScript
+  module can be accessed by another. For more information, see the section on <a href="#1.3">Modules
+  and scopes</a>.</p>
+
+
+  <h4><a name="2.3.5">Constant definition</a></h4>
+
+  <code class="grammar">   const-def <span class="op">:=</span> 'define' identifier '=' expression</code>
+
+  <p>A constant definition statement allows you to bind a name to any expression, so that you can refer
+  to it anywhere else in code by name. This is convenient if there are certain values in your script that
+  are used often: for example, an event flag number, or the name of an important non-player character.
+  If you define such values as a constant, and later decide to change the value, you will
+  only have to modify the constant definition, instead of changing every occurrence of the value within
+  your script.</p>
+
+  <p>Constant definitions are only allowed at the file scope; they cannot occur inside block statements
+  or in the body of a command definition.
+  Constants defined in one CCScript module can be accessed by another. For more information, see the
+  section on <a href="#1.3">Modules and scopes</a>.</p>
+
+  <p>Examples:</p>
+
+  <code>   <span class="keyword0">define</span> boss_name = <span class="string">"Master Puke"</span>
+   <span class="keyword0">define</span> boss_beaten = <span class="keyword0">flag</span> <span class="num">437</span>
+
+   <span class="comment">// Elsewhere, we can refer to the names instead of repeating the values:</span>
+   <span class="keyword0">if</span> boss_beaten {
+      <span class="string">"@Hey, you're those guys who beat {boss_name}!"</span> <span class="keyword1">next</span>
+      <span class="string">"@Good job!"</span> <span class="keyword1">end</span>
+   }</code>
+
+  <h4><a name="2.3.6">Command definition</a></h4>
+
+  <code class="grammar">   command-def <span class="op">:=</span> 'command' identifier ['(' identifier ( ',' identifier )* )? ')'] statement</code>
+
+  <p>Commands in CCScript are similar to constant definitions, but a command definition can
+  include parameters that define part of its behavior. When using a command, you specify the
+  arguments that give value to the parameters of the command. Each argument is a single expression
+  that is evaluated each time the corresponding parameter is used within the body of the command.
+  In this way, CCScript commands are similar to macros, or to functions with lazy parameter evaluation.</p>
+
+  <p>A command definition consists of the <code><span class="keyword0">command</span></code> keyword, followed by
+  an identifier, followed by an optional list of parameter identifiers enclosed in parentheses and
+  separated by commas. This is then followed by the statement that defines the body of the command.</p>
+
+  <p>Command definitions are only allowed at file scope; they cannot occur inside block statements
+  or other command definitions. Commands defined in one CCScript module can be accessed by another;
+  see the section on <a href="#1.3">Modules and scopes</a>.</p>
+
+  <p>Examples:</p>
+
+  <code>   <span class="comment">// Example 1:</span>
+   <span class="keyword0">command</span> sayhello(name) {
+      <span class="string">"@Hello, my name is {name}."</span> <span class="keyword1">next</span>
+      <span class="string">"@It's nice to meet you."</span> <span class="keyword1">next</span>
+   }
+
+   <span class="keyword0">command</span> sell_offer(item, price) {
+      <span class="string">"@Would you like to sell the {itemname(item)} for {money(price)}?"</span> <span class="keyword1">next</span>
+      <span class="keyword0">menu</span> {
+         <span class="string">"Yes"</span>: {
+            <span class="string">"@Excellent.</span>
+            <span class="keyword1">take</span>(<span class="num">0xff</span>, item)
+            <span class="keyword1">givemoney</span>(price)
+         }
+         <span class="string">"No"</span>: {
+            <span class="string">"@Well, okay. Keep it then."</span>
+         }
+      }
+   }</code>
+
+  <p>Again, note that if you want a command's body to contain multiple statements, you must group them
+  together in a block statement. As with <code><span class="keyword0">if</span></code> statements, it is generally
+  best to always use block statements (curly braces) in command definitions, to reduce the likelihood
+  of confusing mistakes.</p>
+
+  <h4><a name="2.3.7">ROM access statement</a></h4>
+
+  <code class="grammar">   rom-access <span class="op">:=</span> 'ROM' '[' expression ']' '=' expression
+               | 'ROMTBL' '[' expression ',' expression ',' expression ']' = expression</code>
+
+  <p>A ROM access statement provides direct access to the contents of the output ROM file, allowing you
+  to modify bytes at certain locations directly. There are two versions of the ROM access statement:
+  one using the <code><span class="keyword0">ROM</span></code> keyword, which simply takes an expression for the location
+  to write to, and an expression for the value to write: <code><span class="keyword0">ROM</span>[location] = value</code>.</p>
+
+  <p>The other version, using the <code><span class="keyword0">ROMTBL</span></code> keyword, is intended for accessing
+  certain elements of table-based data. The syntax is <code><span class="keyword0">ROMTBL</span>[base,size,index] = value</code>.
+  The expression <code>base</code> is the base address of the table to modify, <code>size</code> is the size of
+  each element within the table, <code>index</code> is the index of the element to modify, and <code>value</code>
+  is the data to write at the final location.</p>
+
+  <p>ROM access statements are collected and executed during the last pass of the compiler. They are
+  primarily meant for special-purpose use by certain standard library commands, and you should be
+  extremely careful if you decide to make use of them.</p>
+
+  <p>Examples</p>
+
+  <code>   <span class="comment">// Example 1: overwrite the text at 'testlabel' with a pointer to a different label</span>
+   <span class="keyword0">ROM</span>[testlabel] = <span class="keyword1">goto</span>(otherlabel)
+
+   <span class="comment">// Example 2: change the name of enemy #30</span>
+   <span class="keyword0">ROMTBL</span>[<span class="num">0xD5958A</span>, <span class="num">94</span>, <span class="num">30</span>] = <span class="string">"Exploding sandwich[00]"</span></code>
+
+  <h4><a name="2.3.8">Expression statement</a></h4>
+
+  <p>In addition to the above types of statements, a statement can simply consist of any
+  CCScript expression:</p>
+  <code class="grammar">   statement <span class="op">:=</span> expression</code>
+
+  <p></p>
+
+</div>
+
+
+<h3><a name="2.4">2.4. Expressions</a></h3>
+
+<div class="section">
+
+  <p>An <em>Expression</em> is a combination of values, operators, or identifiers that itself has
+  some <em>value</em> in the context of the program.
+  As statements are the primary building blocks of the logic of a CCScript program,
+  expressions are the primary building blocks of the content of those statements.
+  An expression is a representation of some value within the program - a string of text, a
+  number, the result of invoking a command, and so on.
+  </p>
+
+  <p>Every expression has a <em>type</em>, which is essentially its categorization within the
+  set of possible expressions, and which determines the way it is evaluated.
+  </p>
+
+  <h4><a name="2.4.1">String expressions</a></h4>
+
+  <code class="grammar">expression <span class="op">:=</span> stringliteral</code>
+
+  <p>A string expression simply consists of a string literal. When it is evaluated, the characters
+  in the string are directly translated into a byte array, with certain exceptions:</p>
+
+  <h5>Control Codes</h5>
+  <p>Sections within a string delimited by matched square brackets ('[' and ']') can contain
+  a sequence of hexadecimal digit pairs, and are interpreted directly as a series of bytes. This is
+  useful for inserting control codes directly into text strings, or for outputting binary data
+  in general.</p>
+
+  <code>   <span class="string">"@This is a string[10 0F] with control codes.[13][18 04][02]"</span></code>
+
+  <h5>Pause characters</h5>
+  <p>The characters '/' (forward slash) and '|' (vertical pipe) have special meaning in CCScript
+  text strings. They are shorthand for brief pauses in text processing, useful for quickly and easily
+  adding appropriate pauses to dialogue without having to resort to more verbose representations,
+  such as the standard library <code><span class="keyword1">pause</span></code> command, or the
+  <code>[10 XX]</code> control code. The '/' character produces a pause of 5 frames, and the '|'
+  character produces a pause of 15 frames.</p>
+
+  <code>   <span class="string">"@Well,/ at least I know how to pause.|.|.| dramatically!"</span></code>
+
+  <p>To use the '/' or '|' characters in text, you can use control code brackets
+  with the corresponding character values: '[5F]' and '[AC]'.</p>
+
+  <h5>Expression brackets</h5>
+  <p>It is also possible to embed other CCScript expressions inside strings, by enclosing them in
+  curly braces ('{' and '}'). Each brace pair can contain only one expression: any additional characters
+  after the first expression has been parsed will be ignored. This is convenient for including printable
+  expressions directly in text without having to break the surrounding text up into multiple string
+  literals.</p>
+
+  <code>   <span class="string">"@{<span class="keyword1">name</span>(1)}, would you like to buy a {<span class="keyword1">itemname</span>(86)} for the low, low price of ${atmbalance}?"</span></code>
+
+  <p>It is also possible to embed expressions inside control code blocks:</p>
+
+  <code>   <span class="keyword0">command</span> <span class="keyword1">goto</span>(address) { <span class="string">"[0A {long address}]"</span> }</code>
+
+  <h4><a name="2.4.2">Numeric expressions</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> intliteral</code>
+
+  <p>A numeric expression is simply the use of an integer literal. It is always evaluated as a
+  positive 32-bit integer, and transformed into a byte array in little-endian fashion.</p>
+
+  <code>   <span class="num">1</span>          <span class="comment">// Equivalent to "[01 00 00 00]"</span>
+   <span class="num">0xC58000</span>   <span class="comment">// Equivalent to "[00 80 C5 00]"</span></code>
+
+  <h4><a name="2.4.3">Boolean operators</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> expression 'and' expression
+               | expression 'or' expression
+               | 'not' expression</code>
+
+  <p>A boolean expression is formed by using the logical operators
+  <code><span class="keyword0">and</span></code>,
+  <code><span class="keyword0">or</span></code>, and
+  <code><span class="keyword0">not</span></code>.</p>
+
+  <p>The different boolean operators can be used
+
+  <p>The binary boolean operators <code><span class="keyword0">and</span></code> and <code><span class="keyword0">or</span></code>
+  are <em>short-circuiting</em>. That is, their second operand will be skipped if the first operand completely determines
+  the value of the expression: if the first operand to <code><span class="keyword0">and</span></code> returns
+  "false", the second operand will not be executed, because we already know that "false and X" is false, no
+  matter what X is. Similarly, if the first operand to <code><span class="keyword0">or</span></code> returns "true",
+  the second operand will not be executed, because "true or X" is always true.</p>
+
+  <p>This is mainly an issue when an expression used as an operand to a boolean operator
+  has a <em>side effect</em>, that is, it does something besides just return a value. For example, consider the following
+  code snippet:</p>
+
+  <code>   <span class="keyword0">flag</span> <span class="num">265</span> <span class="keyword0">or</span> <span class="keyword1">take_money</span>(<span class="num">100</span>)</code>
+
+  <p>When this is executed, if event flag #265 is turned on, the <code><span class="keyword0">or</span></code>
+  operator will skip the <code><span class="keyword1">take_money</span></code> part of the expression, so the player will not lose 100 dollars. However,
+  if event flag #265 is turned <em>off</em> (i.e., <code><span class="keyword0">flag</span> <span class="num">265</span></code>
+  returns false), then <code><span class="keyword1">take_money</span></code> will be invoked and the player will
+  lose 100 dollars.</p>
+
+  <p class="warning">
+  NOTE: short-circuiting does not apply to "compile-time" side effects, like ROM write statements.
+  If an expression has compile-time side effects, they will be performed regardless of the future
+  evaluation of the boolean expression.
+  </p>
+
+  <h4><a name="2.4.4">Flag operator</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> 'flag' intliteral</code>
+
+  <p>A flag expression is formed by using the <code><span class="keyword0">flag</span></code> operator
+  with a numeric literal. A flag expression is used to denote an event flag in EarthBound. In most
+  contexts, a flag expression is simply evaluated as a 16-bit number; however, when evaluated as a boolean
+  (i.e., as part of a boolean expression or as the condition of an <code><span class="keyword0">if</span></code>
+  statement), it is converted into a code sequence that will load the current state of the event flag
+  into the result register, thus enabling it to act as a boolean.</p>
+
+  <h4><a name="2.4.5">Identifier expressions</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> identifier ['.' identifier]</code>
+
+  <p>An identifier expression is simply the case of an identifier (the name of a label or defined value)
+  being used where an expression is expected.</p>
+
+  <code><span class="keyword0">define</span> myconstant = <span class="num">625</span>
+mylabel:
+
+   <span class="comment">// The following two expressions are identifier expressions:</span>
+   myconstant
+   mylabel</code>
+
+  <p>The value of an identifier expression depends on the object to which the identifier is bound.
+  When the identifier refers to a label, the value of the expression is the integer address of the label.
+  When the identifier refers to a constant, the value of the expression is the expression bound to the
+  identifier. If the identifier is the name of a command, the expression is a <a href="#2.4.6">command
+  invocation expression</a>.</p>
+
+  <p>An identifier expression can also refer to an identifier defined in another module. In this case,
+  the expression has the form <code>module.identifier</code>; that is, the name of the module file to
+  access is followed by a period character, which is then followed by the identifier. For
+  more information, see the section on <a href="#1.3">Modules and scopes</a>.</p>
+
+  <code>   twoson.mylabel  <span class="comment">// Refers to "mylabel" in the module "twoson.css"</span></code>
+
+  <h4><a name="2.4.6">Command invocations</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> identifier ['.' identifier] ['(' ( expression ( ',' expression )* )? ')']</code>
+
+  <p>A command invocation is a special case of the identifier expression, in which the identifier
+  refers to a command. The identifier in a command invocation can be followed by a list of argument
+  expressions, contained within parentheses and separated by commas.</p>
+
+  <code>   <span class="keyword0">command</span> mycmd(arg1, arg2, arg3) {
+      <span class="string">"{arg1} {arg2} {arg3}"</span>
+   }
+
+   <span class="comment">// A command invocation expression:</span>
+   mycmd(<span class="num">42</span>, <span class="string">"foobar"</span>, somelabel)</code>
+
+  <p>When a command invocation is evaluated, the provided argument expressions are bound to the
+  corresponding parameter names in the command's definition. The value of the command invocation expression
+  is the value of the body of the command definition, evaluated in the environment formed
+  by adding the parameter bindings to the command's scope of definition.</p>
+
+  <p>As with references to labels and constants, a command invocation can refer to a command defined
+  in another module. The syntax is the same as for non-command identifiers: use the name of the module,
+  followed by a period, followed by the name of the command in that module to invoke.</p>
+
+  <code>   bakery.dostuff(<span class="string">"pie"</span>, <span class="num">42</span>)  <span class="comment">// Invokes "dostuff" in the module "bakery.ccs"</span></code>
+
+  <h4><a name="2.4.7">Array access expressions</a></h4>
+
+  <code class="grammar">   expression <span class="op">:=</span> ('byte' | 'short' | 'long') [ '[' intliteral ']' ] expression</code>
+
+  <p>An array access expression directly accesses the byte array form of another expression.
+  It allows certain bytes to be "selected" from an expression, so that only those bytes will
+  be part of the value of the final expression. This is useful for situations where you need
+  to break apart the bytes of an expression, or when you want to ensure that only a certain
+  number of bytes are inserted.</p>
+
+  <p>An array access expression begins with a size keyword (<code><span class="keyword0">byte</span></code>,
+  <code><span class="keyword0">short</span></code>, or <code><span class="keyword0">long</span></code>).
+  If <code><span class="keyword0">byte</span></code> is used, the expression will be treated as
+  an array of bytes (8-bit integers). If <code><span class="keyword0">short</span></code> is used, the expression
+  will be treated as an array of 16-bit integers. If <code><span class="keyword0">long</span></code>
+  is used, it will be treated as an array of 32-bit integers.</p>
+
+  <p>The next part of the expression is the index in the array to be accessed. This is just an
+  integer literal enclosed in brackets. The index is optional; if it is omitted, the index is
+  assumed to be zero. The final part of the array access expression is the expression whose array
+  representation will be accessed.</p>
+
+  <p>Examples:</p>
+
+  <code>   <span class="comment">// Take only the first character of the string "I like pie."</span>
+   <span class="keyword0">byte</span> [<span class="num">0</span>] <span class="string">"I like pie."</span> <span class="comment">// equal to "I"</span>
+
+   <span class="keyword0">short</span> [<span class="num">1</span>] <span class="num">0x11223344</span> <span class="comment">// Takes only the high-order halfword, equal to [22 11]</span>
+   <span class="keyword0">short</span> [<span class="num">0</span>] <span class="num">0x11223344</span> <span class="comment">// Takes the low-order halfword, equal to [44 33]</span>
+
+   <span class="comment">// Array accessors are used in the CCScript standard library to ensure that only
+   // the correct number of bytes are inserted into a control code parameter:</span>
+   <span class="keyword0">command</span> <span class="keyword1">goto</span>(target) { <span class="string">"[0A {long target}]"</span>
+   <span class="keyword0">command</span> <span class="keyword1">set</span>(num) { <span class="string">"[04 {short num}]"</span> }
+   <span class="keyword0">command</span> <span class="keyword1">pause</span>(len) { <span class="string">"[10 {byte len}]"</span> }
+   </code>
+</div>
+
+
+
+
+
+
+
+
+<h2><a name="3">3. Future revisions</a></h2>
+
+<div class="section">
+  <p>The current version of CCScript is 1.0.</p>
+
+  <p>The next release is tentatively numbered 1.1, and will most likely focus primarily on bugfixes.
+  However, some additional features are being considered for inclusion as well. Several of these
+  are listed here:</p>
+
+  <ul>
+     <li>Loop structures: <code>while</code> loops, simple <code>for</code> loops</li>
+     <li>Inline ASM blocks; ability to code assembly directly into CCScript modules</li>
+     <li>More flexible ROM access expression syntax; read from as well as write to the ROM</li>
+     <li>Compile-time arithmetic operators</li>
+     <li>Compile-time control structures</li>
+  </ul>
+
+  <p>If you have any suggestions for CCScript features (or if you would like to report a bug),
+  drop by the <a href="http://forum.starmen.net/forum/Community/PKHack/pkhax-What-it-is-Why-it-is-there-and-Why-Care/first">
+  #pkhax channel</a> on DynastyNet (irc.dynastynet.net). Mr. Accident is in there often enough,
+  so just give him a poke if you want to gripe about CCScript.</p>
+</div>
+
+<h2><a name="4">4. Standard library</a></h2>
+
+<div class="section">
+  <p>CCscript includes a large collection of built-in commands for commonly used control codes.
+  This collection of commands forms the <em>CCScript standard library</em>, and is documented
+  in full in the <a href="reference.html">Command Reference</a>. The standard library is not
+  comprehensive; there are numerous control codes that are not yet included. In many cases
+  this is because a particular control code is not yet fully understood, but in still more cases
+  it's because I'm lazy, and because the command reference is already about 70 pages long.</p>
+
+  <p>CCScript is intended to be extensible through commands, so if you find functionality
+  missing from the standard library, don't hesitate to write up a module containing some useful
+  commands for things that were omitted from the set of built-ins. The standard library will
+  probably be extended in the future also, as the purposes of more control codes are discovered.</p>
+</div>
+
+
+
+
+
+
+<br/><br/><br/>
+<hr/>
+<p><small>CCScript Language Reference, version 1.0 -- Contact: mraccident@gmail.com</small></p>
+</body>
+</html>

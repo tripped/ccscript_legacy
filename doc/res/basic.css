@@ -1,0 +1,235 @@
+ /*
+  * Crappy CCSCript docs stylesheet
+  */
+  
+body
+{
+  max-width:900px;
+  background-color: #FFF3EF;
+}
+
+h3
+{
+   font-size:150%;
+}
+
+a img
+{
+   border:0px;
+}
+
+div.section
+{
+   margin-bottom: 3em;
+}
+
+div.subsection
+{
+   margin-bottom: 2em;
+   padding-bottom: 1em;
+   padding-left: 2em;
+   border-bottom: 1px solid #BBB1AF
+}
+
+/*
+ * section table of contents
+ */
+table.sectiontoc
+{
+
+}
+table thead
+{
+  background-color:#CFC0C0;
+}
+table.sectiontoc td
+{
+  min-width: 10em;
+  border: 1px solid #BBB1AF;
+  padding-right: 1em
+}
+table.sectiontoc td+td
+{
+  min-width:20em;
+}
+
+
+
+
+/*
+ * stdlib reference entries
+ */
+div.desc
+{
+  margin-bottom: 1.5em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #BBB1AF;
+}
+div.desc>a
+{
+  font-size:140%;
+}
+div.desc h4
+{
+  margin-left: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+/*
+ * paragraph immediately following entry anchor is not indented
+ */
+div.desc a + p
+{
+  margin-left: 2em;
+}
+/*
+ * decrease vertical spacing between headers and paragraphs
+ */
+div.desc h4 + p
+{
+  margin-top: 0em;
+}
+/*
+ * all other entry paragraphs indented
+ */
+div.desc p, div.desc>code
+{
+  margin-left: 3em;
+}
+
+/*
+ * tables also indented
+ */
+div.desc table
+{
+   font-size: 80%;
+   margin-left: 5em;
+}
+div.desc table td
+{
+   min-width: 5em;
+   border: 1px solid #BBB1AF;
+}
+td.text_preview { background-color: #101010; padding:4px;}
+
+
+
+/*
+ * Paragraphs shouldn't run quite to the edge
+ */
+p
+{
+  margin-right: 2em;
+}
+
+p.warning
+{
+  border: 2px dashed #FFBBBB;
+  background-color: #FFEEEE;
+  padding: 1em;
+  color: red;
+}
+
+
+/*
+ * Image boxes
+ */
+div.image
+{
+  margin: 1em;
+  padding-left: 1em;
+}
+div.image img
+{
+}
+div.image div.caption
+{
+  font-size: 80%;
+  font-style: italic;
+}
+
+
+/*
+ * By default, code is in block format
+ */
+code
+{
+  display: block;
+  white-space: pre;
+  border: 1px solid black;
+  background-color: white;
+
+  padding: 1em;
+  margin: 1em;
+  margin-right: 3em;
+}
+
+
+/*
+ * Code inside certain elements should be inlined
+ */
+p code, ul code, div.desc a code, table code
+{
+  display: inline;
+  border: 1px solid #DDD3CF;
+  padding: 0;
+  margin: 0;
+}
+
+
+/*
+ * Syntax highlighting spans
+ */
+span.string
+{
+  color: #008080;
+}
+
+span.num
+{
+  color: #800080;
+}
+
+span.comment
+{
+  color: #008000;
+}
+
+span.keyword0
+{
+  color: #0000FF;
+}
+
+span.keyword1
+{
+  color: #000080;
+}
+
+span.string span.keyword1
+{
+  color: #004080;
+}
+
+span.keyword1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+span.keyword1 a:hover {
+  text-decoration: underline;
+}
+
+
+/*
+ * Grammar syntax highlighting
+ */
+code.grammar {
+  background-color: #F2F2FF;
+  border: 2px dashed #AAAADD;
+}
+code.grammar span.op {
+  color: #000080;
+}
+code.grammar span.bracket {
+  color: #C00000;
+}
