@@ -138,7 +138,7 @@ void CommandDef::PreTypecheck(SymbolTable* root, bool atroot)
 	// Create a temporary scope, just to check for repeat parameter definitions
 	SymbolTable* scope = new SymbolTable(root);
 	for(unsigned int i = 0; i < args.size(); ++i) {
-		if(scope->Define(args[i], NULL)) {
+		if(scope->Define(args[i], Value::Null)) {
 			string err = "repeat definition of parameter '" + args[i] + "'";
 			Error(err);
 		}

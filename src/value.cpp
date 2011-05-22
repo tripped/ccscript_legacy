@@ -153,7 +153,7 @@ Value::Value(Node* n)
 }
 
 Value::Value(Type type)
-	: type(type), val(NULL)
+	: type(type), val(0)
 {
 	Init();
 }
