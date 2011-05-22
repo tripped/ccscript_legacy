@@ -326,7 +326,7 @@ void Module::PrintCode() const
 	if(failed) return;
 	printf("Compiled code -- '%s'\n", this->filename.c_str());
 	printf("=============================================\n");
-	code->PrintCode();
+	printf("%s", code->ToString().c_str());
 	printf("\n");
 }
 

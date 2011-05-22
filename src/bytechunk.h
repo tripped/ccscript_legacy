@@ -156,23 +156,6 @@ public:
 	friend std::ostream& operator<<(std::ostream& stream, const ByteChunk& rhs);
 
 
-	// TODO: replace this with a proper ToString
-	void PrintCode() const {
-		for(unsigned int i = 0; i < bytes.size(); ++i) {
-			if(!cinfo[i]) {
-				if(i == 0 || cinfo[i-1]) {
-					printf("[");
-				}
-				printf("%02X", bytes[i]);
-				if(i == bytes.size()-1 || cinfo[i+1]) {
-					printf("]");
-				} else printf(" ");
-			}
-			else
-				printf("%c", bytes[i]-0x30);
-		}
-	}
-
 private:
 	std::vector<unsigned char> bytes;
 	std::vector<Reference> refs;
