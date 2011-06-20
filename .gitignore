@@ -1,0 +1,8 @@
+src/bin/
+src/obj
+src/runtests
+src/tests/bin/
+src/tests/obj/
+src/tests/*.tmp
+src/tests/*.reset.txt
+src/tests/*.log

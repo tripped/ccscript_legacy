@@ -1,7 +1,6 @@
 #
 # Crappy makefile for ccscript compiler (ccc)
 #
-CXX = g++
 CXXFLAGS = -c -Wall -O3 
 OBJDIR = obj
 BINDIR = bin
