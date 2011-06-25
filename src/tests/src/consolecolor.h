@@ -101,6 +101,7 @@ static void SetColor(int clr) {
 		case CLR_WHITE:
 			std::cout << "\033[01;37m";	break;
 		case CLR_NORMAL:
+			std::cout << "\033[0m";	break;
 		default:
 			std::cout << "\033[01;39m";	break;
 	}
