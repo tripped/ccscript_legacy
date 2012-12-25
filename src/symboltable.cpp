@@ -219,7 +219,7 @@ string SymbolTable::JumpsTable() const
 	ss << "LABEL                    ADDRESS" << endl;
 	map<string,Anchor*>::const_iterator i;
 	for(i = jumps.begin(); i != jumps.end(); ++i) {
-		ss << setw(25) << std::left << i->first;
+		ss << setw(24) << std::left << i->first << ' ';
 		ss << setbase(16) << i->second->GetTarget() << endl;
 	}
 	return ss.str();
