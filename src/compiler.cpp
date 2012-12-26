@@ -742,7 +742,7 @@ void Compiler::WriteSummary(std::ostream& out)
 			if(j->first.empty() || !isalpha(j->first.at(0)))
 				continue;
 
-			out << left << setw(29) << j->first;
+			out << left << setw(28) << j->first << ' ';
 			out << "$" << setbase(16) << j->second->GetTarget() << endl;
 		}
 		out << "-----------------------------------------------------------------" << endl;
