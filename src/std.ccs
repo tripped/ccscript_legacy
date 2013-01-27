@@ -64,7 +64,12 @@ command setup_background(bg) {
 /*
  * Basic control codes
  */
-command newline "[00]"
+ 
+// Update 8/23: newline redefined as [01] - only break when
+//  current line is not blank.
+// New linebreak command has old newline behavior.
+command linebreak "[00]"
+command newline "[01]"
 
 command eob "[02]"
 
