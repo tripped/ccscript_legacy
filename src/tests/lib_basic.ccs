@@ -5,7 +5,7 @@
 /// "This is a...[10 30] dramatic pause!"
 /// "Setting flag...[04 02 00]"
 /// "Unsetting flag...[05 02 00]"
-/// "Newline...[00]"
+/// "Newline...[01]"
 /// "Clearline...[12]"
 /// "[08 56 34 12 00]"
 /// "[0a bc 9a 78 00]"
