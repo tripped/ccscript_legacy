@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 	//  -s <address>		output start
 	//  -e <address>		output end
 	//  -l <file>			include library file
-	//  -libs <dir>         look in <dir> for standard libraries
+	//  --libs <dir>         look in <dir> for standard libraries
 	//  -h,--help			print help message
 	//  --nostdlibs			do not include default libraries
 	//  --shortpause <n>	duration of short pauses ('/')
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 			printversion();
 			return 0;
 		}
-		else if(!strcmp(argv[p],"-libs")) {
+		else if(!strcmp(argv[p],"--libs")) {
 			p++;
 			if(p >= argc) {
 				std::cout << "argument error: no library path specified" << std::endl;
@@ -284,4 +284,3 @@ int main(int argc, char* argv[])
 
 	return compiler.Failed();
 }
-
