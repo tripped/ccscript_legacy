@@ -20,7 +20,7 @@ Anchor::Anchor(const std::string& name)
 }
 
 Anchor::Anchor(const std::string &name, int position)
-	: name(name), position(position), address(address), external(false)
+	: name(name), position(position), address(0), external(false)
 {
 }
 
