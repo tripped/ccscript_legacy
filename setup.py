@@ -9,7 +9,7 @@ from setuptools.extension import Extension
 
 WINDOWS_BOOST_VERSION = "1_55"
 WINDOWS_BOOST_DIRECTORY = "c:\\local\\boost_{}_0".format(WINDOWS_BOOST_VERSION)
-WINDOWS_VISUAL_STUDIO_VERSION = "9.0"
+WINDOWS_VISUAL_STUDIO_VERSION = "12.0"
 
 source_files = [os.path.join("src", x) for x in os.listdir("src") if x.lower().endswith(".cpp")]
 boost_libraries = ["boost_python", "boost_filesystem"]
