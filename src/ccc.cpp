@@ -7,8 +7,8 @@
 #include <sstream>
 #include <signal.h>
 
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem::v1;
 
 #include "compiler.h"
 #include "module.h"
@@ -66,15 +66,11 @@ void printusage()
 
 int main(int argc, char* argv[])
 {
-	//
-	// Initialize boost::filesystem::initial_path
-	//
-	fs::initial_path();
 
 	//
 	// Get the default libs path
 	//
-	string libspath = ( fs::path(argv[0]).branch_path() / "lib" ).string();
+	string libspath = ( fs::path(argv[0]).parent_path() / "lib" ).string();
 
 
 	if(argc < 2) {

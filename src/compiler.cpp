@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem::v1;
 
 #include "module.h"
 
@@ -191,7 +191,7 @@ Module* Compiler::LoadModule(const std::string &filename)
 string Compiler::FindModule(const string& name, const string& filedir)
 {
 	// Complete paths aren't looked for in include directories
-	if (fs::path(name).is_complete())
+	if (fs::path(name).is_absolute())
 		return fs::exists( name )? name : "";
 
 	// First, try in the provided file directory.
@@ -317,7 +317,7 @@ void Compiler::ProcessImports()
 			string filename = *it;
 
 			fs::path module_path( m->GetFileName() );
-			fs::path module_dir = module_path.branch_path();
+			fs::path module_dir = module_path.parent_path();
 
 			string name = Module::NameFromFilename(filename);
 
