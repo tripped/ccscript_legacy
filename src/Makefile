@@ -1,13 +1,13 @@
 #
 # Crappy makefile for ccscript compiler (ccc)
 #
-CXXFLAGS = -c -Wall -O3 
+CXXFLAGS = -c -Wall -O3 -std=c++14
 OBJDIR = obj
 BINDIR = bin
 OUTFILE = ccc
 SOURCES = ccc.cpp compiler.cpp module.cpp bytechunk.cpp lexer.cpp parser.cpp ast.cpp \
           stringparser.cpp symboltable.cpp table.cpp value.cpp anchor.cpp
-LIBS = -lboost_system -lboost_filesystem
+LIBS = -lstdc++fs
 OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 INSTALL_DIR = /usr/local
 
