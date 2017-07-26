@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 				//
 				// NOTE: this assumes that all the paths in the test list file
 				// are relative, which is fine for our purposes. For anything
-				// more general, we should just use boost::filesystem::path...
+				// more general, we should just use std::experimental::filesystem::v1::path...
 				string test_dir( testfilename );
 				string::size_type lastsep = test_dir.find_last_of("\\/");
 				if(lastsep == string::npos)

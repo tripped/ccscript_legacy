@@ -1,19 +1,39 @@
 #include <iostream>
 #include <vector>
-#include <boost/python.hpp>
+#include <sstream>
+#include <Python.h>
 #include "ccc.h"
-
-namespace py = boost::python;
 
 char CCC_BASENAME[] = "ccc";
 
-py::tuple main_wrapper(py::list args) {
-  int argc = py::extract<int>(args.attr("__len__")());
+static PyObject* ccc(PyObject* self, PyObject* args) {
+  // The ccc function takes a list of arguments, we first need to pull
+  // the list out of the args tuple
+  PyObject* argList;
+  if(!PyArg_ParseTuple(args, "O", &argList)) {
+    return nullptr;
+  }
+
+  auto argc = static_cast<int>(PyList_Size(argList));
+  if(argc < 0) {
+    return nullptr;
+  }
+
   std::vector<char*> argv;
   argv.reserve(argc+1);
   argv.push_back(CCC_BASENAME);
   for (int i = 0; i < argc; ++i) {
-    argv.push_back(py::extract<char*>(args[i]));
+    auto item = PyList_GetItem(argList, i);
+    if (!item) {
+      return nullptr;
+    }
+
+    auto argument = PyUnicode_AsUTF8(item);
+    if (!argument) {
+      return nullptr;
+    }
+
+    argv.push_back(argument);
   }
 
   std::stringstream buffer;
@@ -25,10 +45,46 @@ py::tuple main_wrapper(py::list args) {
 
   std::string compilation_log = buffer.str();
 
-  return py::make_tuple(return_value, compilation_log);
-} 
-
-BOOST_PYTHON_MODULE(ccscript)
-{
-  def("ccc", main_wrapper);
+  return Py_BuildValue("(is)", return_value, compilation_log.c_str());
 }
+
+static PyMethodDef ccscript_methods[] = {
+  {"ccc", ccc, METH_VARARGS, "ccc"},
+  {NULL, NULL, 0, NULL}
+};
+
+struct module_state {
+  PyObject *error;
+};
+
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+
+static int ccscript_traverse(PyObject *m, visitproc visit, void *arg) {
+  Py_VISIT(GETSTATE(m)->error);
+  return 0;
+}
+
+static int ccscript_clear(PyObject *m) {
+  Py_CLEAR(GETSTATE(m)->error);
+  return 0;
+}
+
+static struct PyModuleDef moduledef = {
+  PyModuleDef_HEAD_INIT,
+  "ccscript",
+  NULL,
+  sizeof(struct module_state),
+  ccscript_methods,
+  NULL,
+  ccscript_traverse,
+  ccscript_clear,
+  NULL
+};
+
+PyMODINIT_FUNC
+PyInit_ccscript(void)
+{
+  PyObject *module = PyModule_Create(&moduledef);
+  return module;
+}
+
