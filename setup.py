@@ -16,7 +16,7 @@ if platform.system() == "Linux":
       extra_link_args = ["-lstdc++fs"]
 
 setup(name="ccscript",
-      version="1.338",
+      version="1.339",
       description="ccscript",
       url="http://starmen.net/pkhack/ccscript",
       ext_modules=[

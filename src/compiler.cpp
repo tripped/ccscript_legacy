@@ -20,6 +20,7 @@ namespace fs = std::experimental::filesystem::v1;
 #include "module.h"
 #include "symboltable.h"
 #include "exception.h"
+#include "util.h"
 
 using namespace std;
 
@@ -60,7 +61,7 @@ Compiler::Compiler(const string& romfile, unsigned int adr, unsigned int endadr)
 	nostdlibs = false;
 
 	// Open the file
-	ifstream file(filename.c_str(), ifstream::binary);
+	ifstream file(ConvertToNativeString(filename), ifstream::binary);
 
 	if(file.fail()) {
 		Error("failed to open file " + filename + " for reading.");
@@ -130,7 +131,7 @@ Compiler::~Compiler()
 void Compiler::WriteOutput()
 {
 	if(failed) return;
-	ofstream file(filename.c_str(), ofstream::binary);
+	ofstream file(ConvertToNativeString(filename), ofstream::binary);
 
 	if(file.fail()) {
 		Error("failed to open file " + filename + " for writing.");
@@ -576,7 +577,7 @@ void Compiler::DoDelayedWrites()
  */
 void Compiler::WriteResetInfo(const std::string &filename)
 {
-	ofstream file(filename.c_str());
+	ofstream file(ConvertToNativeString(filename));
 
 	if(file.fail())
 		throw Exception("couldn't create info file '" + filename + "'");
@@ -621,7 +622,7 @@ void Compiler::WriteResetInfo(const std::string &filename)
 
 void Compiler::ApplyResetInfo(const std::string& filename)
 {
-	ifstream file(filename.c_str());
+	ifstream file(ConvertToNativeString(filename));
 
 	if(file.fail())
 		return;
