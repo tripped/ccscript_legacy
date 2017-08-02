@@ -1,1 +1,1 @@
-int main(int argc, char* argv[]);
+int run(int argc, const char* argv[]);

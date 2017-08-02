@@ -19,7 +19,7 @@ static PyObject* ccc(PyObject* self, PyObject* args) {
     return nullptr;
   }
 
-  std::vector<char*> argv;
+  std::vector<const char*> argv;
   argv.reserve(argc+1);
   argv.push_back(CCC_BASENAME);
   for (int i = 0; i < argc; ++i) {
@@ -39,7 +39,7 @@ static PyObject* ccc(PyObject* self, PyObject* args) {
   std::stringstream buffer;
   std::streambuf* old_cout = std::cout.rdbuf(buffer.rdbuf());
   std::streambuf* old_cerr = std::cerr.rdbuf(buffer.rdbuf());
-  int return_value = main(argc + 1, &argv[0]);
+  int return_value = run(argc + 1, argv.data());
   std::cout.rdbuf(old_cout);
   std::cerr.rdbuf(old_cerr);
 

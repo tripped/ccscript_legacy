@@ -16,6 +16,7 @@
 #include "symboltable.h"
 #include "bytechunk.h"
 #include "exception.h"
+#include "util.h"
 
 using namespace std;
 
@@ -68,9 +69,8 @@ void Module::Load(const string& filename)
 		failed = true;
 		return;
 	}
-	ifstream in(filename.c_str());
 
-
+	ifstream in(ConvertToNativeString(filename));
 	if(in.fail())
 	{
 		parent->Error("couldn't open " + filename);
