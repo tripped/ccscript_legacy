@@ -33,7 +33,7 @@ static PyObject* ccc(PyObject* self, PyObject* args) {
       return nullptr;
     }
 
-    argv.push_back(argument);
+    argv.push_back(const_cast<char*>(argument));
   }
 
   std::stringstream buffer;
@@ -87,4 +87,3 @@ PyInit_ccscript(void)
   PyObject *module = PyModule_Create(&moduledef);
   return module;
 }
-
