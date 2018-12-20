@@ -12,7 +12,7 @@ extra_compile_args = []
 extra_link_args = []
 
 if platform.system() == "Linux":
-      extra_compile_args = ["-std=c++14"]
+      extra_compile_args = ["-std=c++14", "-fpermissive"]
       extra_link_args = ["-lstdc++fs"]
 
 setup(name="ccscript",

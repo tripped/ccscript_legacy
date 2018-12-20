@@ -33,7 +33,7 @@ static PyObject* ccc(PyObject* self, PyObject* args) {
       return nullptr;
     }
 
-    argv.push_back(const_cast<char*>(argument));
+    argv.push_back(argument);
   }
 
   std::stringstream buffer;
