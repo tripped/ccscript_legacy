@@ -5,12 +5,15 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <codecvt>
-#include <iterator>
 #include <signal.h>
 
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem::v1;
+
+#ifdef _WIN32
+#include <codecvt>
+#include <iterator>
+#endif
 
 #include "ccc.h"
 #include "compiler.h"
@@ -22,8 +25,6 @@ using std::string;
 using std::stringstream;
 using std::cout;
 using std::endl;
-
-
 
 string getbasepath(const char* p)
 {
@@ -52,8 +53,6 @@ void printusage()
 		 << "   --nostdlibs           Do not include the default standard libraries" << endl
 		 << "   --summary <file>      Writes a compilation summary to <file>" << endl
 		 << "                           Useful if you want to know where stuff went." << endl
-		 //<< "   --shortpause <n>      Short pauses '/' are <n> frames long (default 5)" << endl
-		 //<< "   --longpause <n>       Long pauses '|' are <n> frames long (default 15)" << endl
 		 << "   --printAST            Prints the abstract syntax tree for each module" << endl
 		 << "   --printRT             Prints the root symbol table for each module" << endl
 		 << "   --printJumps          Prints the compiled addresses of all labels" << endl
@@ -68,33 +67,7 @@ void printusage()
 		 << "   put the resulting compiled text at $F20000 in the ROM Earthbound.smc" << endl;
 }
 
-#ifdef _WIN32
-int wmain(int argc, wchar_t* argv[])
-{
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
-
-	// Convert the utf-16 args to utf-8
-	std::vector<std::string> utf8Args;
-	for(int i = 0; i < argc; ++i) {
-		auto utf8Arg = converter.to_bytes(argv[i]);
-		utf8Args.push_back(utf8Arg);
-	}
-	
-	// Expose the std::strings as a vector of const char*s
-	std::vector<const char*> utf8Argv;
-	std::transform(utf8Args.begin(), utf8Args.end(), std::back_inserter(utf8Argv),
-              [](const std::string& s){ return s.c_str(); } );
-
-	return run(argc, utf8Argv.data());
-}
-#else
-int main(int argc, const char* argv[])
-{
-	return run(argc, argv);
-}
-#endif
-
-int run(int argc, const char* argv[])
+int cccmain(int argc, const char* argv[])
 {
 	//
 	// Get the default libs path
@@ -118,8 +91,6 @@ int run(int argc, const char* argv[])
 	vector<string> libs;
 	bool noreset = false;
 	bool nostdlibs = false;
-	unsigned char shortpause;
-	unsigned char longpause;
 	bool printAST = false;
 	bool printRT = false;
 	bool printJumps = false;
@@ -134,8 +105,6 @@ int run(int argc, const char* argv[])
 	//  --libs <dir>         look in <dir> for standard libraries
 	//  -h,--help			print help message
 	//  --nostdlibs			do not include default libraries
-	//  --shortpause <n>	duration of short pauses ('/')
-	//  --longpause <n>		duration of long pauses ('|')
 	//  --printAST			print AST for each module
 	//  --printRT			print root table for each module
 	//  --printJumps		print a list of jumps and addresses
@@ -211,14 +180,6 @@ int run(int argc, const char* argv[])
 				return -1;
 			}
 			summaryfile = argv[p++];
-		}
-		else if(!strcmp(argv[p],"--shortpause")) {
-			p++;
-			shortpause = (unsigned char)strtoul(argv[p++], NULL, 10);
-		}
-		else if(!strcmp(argv[p],"--longpause")) {
-			p++;
-			longpause = (unsigned char)strtoul(argv[p++], NULL, 10);
 		}
 		else if(!strcmp(argv[p],"--printAST")) {
 			p++;
@@ -309,3 +270,31 @@ int run(int argc, const char* argv[])
 
 	return compiler.Failed();
 }
+
+#ifdef _WIN32
+int wmain(int argc, const wchar_t* argv[])
+{
+	std::vector<std::string> utf8Args;
+	std::vector<const char*> utf8Argv;
+	utf8Args.reserve(argc);
+	utf8Args.reserve(argc);
+
+	{
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
+
+		// Convert the utf-16 args to utf-8...
+		// and expose the std::strings as a vector of const char*s
+		for(int i = 0; i < argc; ++i) {
+			utf8Args.emplace_back(converter.to_bytes(argv[i]));
+			utf8Argv.emplace_back(utf8Args[i].c_str());
+		}
+	}
+
+	return cccmain(argc, utf8Argv.data());
+}
+#else
+int main(int argc, const char* argv[])
+{
+	return cccmain(argc, argv);
+}
+#endif

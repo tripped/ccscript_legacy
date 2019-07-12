@@ -39,7 +39,7 @@ static PyObject* ccc(PyObject* self, PyObject* args) {
   std::stringstream buffer;
   std::streambuf* old_cout = std::cout.rdbuf(buffer.rdbuf());
   std::streambuf* old_cerr = std::cerr.rdbuf(buffer.rdbuf());
-  int return_value = run(argc + 1, argv.data());
+  int return_value = cccmain(argc + 1, argv.data());
   std::cout.rdbuf(old_cout);
   std::cerr.rdbuf(old_cerr);
 

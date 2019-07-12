@@ -85,7 +85,7 @@ Compiler::Compiler(const string& romfile, unsigned int adr, unsigned int endadr)
 	file.seekg(0, ifstream::end);
 	filesize = file.tellg();
 	file.seekg(0);
-	filebuffer = new char[filesize];
+	filebuffer = new char[(unsigned int) filesize];
 	file.read(filebuffer, filesize);
 	file.close();
 
@@ -472,7 +472,7 @@ void Compiler::OutputModules()
 			throw Exception(ss.str());
 		}
 
-		m->WriteCode(filebuffer, MapVirtualAddress(m->GetBaseAddress()), filesize);
+		m->WriteCode(filebuffer, MapVirtualAddress(m->GetBaseAddress()), (int) filesize);
 
 		if(printJumps && m->GetName().substr(0,3) != "std")
 			m->PrintJumps();
@@ -555,7 +555,7 @@ void Compiler::DoDelayedWrites()
 				<< romwrites[i]->GetVirtualAddress();
 			throw Exception(ss.str());
 		}
-		romwrites[i]->DoWrite(filebuffer, padr, filesize);
+		romwrites[i]->DoWrite(filebuffer, padr, (int) filesize);
 	}
 }
 
