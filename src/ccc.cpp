@@ -5,13 +5,17 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <codecvt>
+#include <iterator>
 #include <signal.h>
 
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem::v1;
 
+#include "ccc.h"
 #include "compiler.h"
 #include "module.h"
+#include "util.h"
 
 using std::vector;
 using std::string;
@@ -32,7 +36,7 @@ string getbasepath(const char* p)
 
 void printversion()
 {
-	cout << "ccc version 1.337 Duck Tape Edition" << endl;
+	cout << "ccc version 1.339 Duck Tape Edition" << endl;
 }
 
 void printusage()
@@ -64,9 +68,34 @@ void printusage()
 		 << "   put the resulting compiled text at $F20000 in the ROM Earthbound.smc" << endl;
 }
 
-int main(int argc, char* argv[])
+#ifdef _WIN32
+int wmain(int argc, wchar_t* argv[])
 {
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
 
+	// Convert the utf-16 args to utf-8
+	std::vector<std::string> utf8Args;
+	for(int i = 0; i < argc; ++i) {
+		auto utf8Arg = converter.to_bytes(argv[i]);
+		utf8Args.push_back(utf8Arg);
+	}
+	
+	// Expose the std::strings as a vector of const char*s
+	std::vector<const char*> utf8Argv;
+	std::transform(utf8Args.begin(), utf8Args.end(), std::back_inserter(utf8Argv),
+              [](const std::string& s){ return s.c_str(); } );
+
+	return run(argc, utf8Argv.data());
+}
+#else
+int main(int argc, const char* argv[])
+{
+	return run(argc, argv);
+}
+#endif
+
+int run(int argc, const char* argv[])
+{
 	//
 	// Get the default libs path
 	//
@@ -269,7 +298,7 @@ int main(int argc, char* argv[])
 	if(!summaryfile.empty())
 	{
 		std::fstream file;
-		file.open(summaryfile.c_str(), std::ios_base::out|std::ios_base::trunc);
+		file.open(ConvertToNativeString(summaryfile), std::ios_base::out|std::ios_base::trunc);
 		if(file.fail())
 		{
 			std::cerr << "Couldn't open " << summaryfile << " to write summary file." << std::endl;
