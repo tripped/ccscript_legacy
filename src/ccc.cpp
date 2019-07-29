@@ -7,12 +7,14 @@
 #include <sstream>
 #include <signal.h>
 
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem::v1;
-
 #ifdef _WIN32
-#include <codecvt>
-#include <iterator>
+	#include <codecvt>
+	#include <iterator>
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem::v1;
+#else
+	#include "filesystem/filesystem_mini.h"
+	namespace fs = filesystem;
 #endif
 
 #include "ccc.h"
@@ -259,7 +261,7 @@ int cccmain(int argc, const char* argv[])
 	if(!summaryfile.empty())
 	{
 		std::fstream file;
-		file.open(ConvertToNativeString(summaryfile), std::ios_base::out|std::ios_base::trunc);
+		file.open(ConvertToNativeString(summaryfile).c_str(), std::ios_base::out|std::ios_base::trunc);
 		if(file.fail())
 		{
 			std::cerr << "Couldn't open " << summaryfile << " to write summary file." << std::endl;

@@ -9,8 +9,13 @@
 #include <iomanip>
 #include <sstream>
 
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem::v1;
+#ifdef _WIN32
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem::v1;
+#else
+	#include "filesystem/filesystem_mini.h"
+	namespace fs = filesystem;
+#endif
 
 #include "module.h"
 
@@ -166,7 +171,7 @@ Module* Compiler::LoadModule(const std::string &filename)
 	// instead of SetLibTable, we should use m->Include(othermodule).
 	//m->SetLibTable(libtable);
 	string name = m->GetName();
-	
+
 	if(GetModule(name) != NULL) {
 		Error("attempt to redefine module " + name + "; module names must be unique");
 		return NULL;
@@ -193,7 +198,7 @@ string Compiler::FindModule(const string& name, const string& filedir)
 {
 	// Complete paths aren't looked for in include directories
 	if (fs::path(name).is_absolute())
-		return fs::exists( name )? name : "";
+		return fs::exists( name ) ? name : "";
 
 	// First, try in the provided file directory.
 	fs::path base(filedir);
@@ -415,8 +420,8 @@ void Compiler::AssignModuleAddresses()
 		bool found = false;
 		for(i = sorted.begin(); i != sorted.end(); ++i)
 		{
-			unsigned int size = (*i)->GetCodeSize();		
-			if((base & 0xFFFF) + size <= 0x10000) 
+			unsigned int size = (*i)->GetCodeSize();
+			if((base & 0xFFFF) + size <= 0x10000)
 			{
 				// Check for overwriting maximum address
 				if((endadr > 0) && (base + size >= endadr))
