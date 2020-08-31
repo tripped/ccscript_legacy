@@ -1,13 +1,12 @@
 #
 # Crappy makefile for ccscript compiler (ccc)
 #
-CXXFLAGS = -c -Wall -O3 -std=c++14
+CXXFLAGS = -c -Wall -O3 -std=c++11
 OBJDIR = obj
 BINDIR = bin
 OUTFILE = ccc
 SOURCES = ccc.cpp compiler.cpp module.cpp bytechunk.cpp lexer.cpp parser.cpp ast.cpp \
           stringparser.cpp symboltable.cpp table.cpp value.cpp anchor.cpp
-LIBS = -lstdc++fs
 OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)/%.o)
 INSTALL_DIR = /usr/local
 
@@ -39,13 +38,13 @@ endif
 #
 # Targets
 #
-	
+
 all: ccc tests runtests
 
 
 # Builds the compiler
 ccc: mkdirs libsdir $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LIBS) -o $(BINDIR)/$@
+	$(CXX) $(OBJECTS) -o $(BINDIR)/$@
 
 
 # Ensure that bin and obj directories exist
@@ -111,5 +110,5 @@ $(OBJDIR)/table.o:			table.h
 clean:
 	-$(RM) $(OBJDIR)$(SEP)*.o $(BINDIR)$(SEP)$(OUTFILE)
 	-$(MAKE) -C tests clean
-	
+
 

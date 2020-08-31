@@ -75,17 +75,17 @@ int main(int argc, char** argv)
 	log.open(logfile.c_str(), ios::app);
 	log << endl << "==========================" << endl;
 	log << endl << "BEGIN TESTS" << endl << endl;
-	
+
 
 	//
 	// Try to run all tests specified in the test list file
 	//
-	try 
+	try
 	{
 		ifstream file(tests_file.c_str());
 		if(file.fail())
 			throw runtime_error(string("couldn't open test list file '") + tests_file + "'");
-		
+
 		while(!file.eof())
 		{
 			string testfilename;
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 				//
 				// NOTE: this assumes that all the paths in the test list file
 				// are relative, which is fine for our purposes. For anything
-				// more general, we should just use std::experimental::filesystem::v1::path...
+				// more general, we should just use the standard library's filesystem path...
 				string test_dir( testfilename );
 				string::size_type lastsep = test_dir.find_last_of("\\/");
 				if(lastsep == string::npos)

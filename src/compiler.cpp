@@ -9,8 +9,13 @@
 #include <iomanip>
 #include <sstream>
 
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem::v1;
+#ifdef _WIN32
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem::v1;
+#else
+	#include "filesystem/filesystem_mini.h"
+	namespace fs = filesystem;
+#endif
 
 #include "module.h"
 
@@ -20,6 +25,7 @@ namespace fs = std::experimental::filesystem::v1;
 #include "module.h"
 #include "symboltable.h"
 #include "exception.h"
+#include "util.h"
 
 using namespace std;
 
@@ -60,7 +66,7 @@ Compiler::Compiler(const string& romfile, unsigned int adr, unsigned int endadr)
 	nostdlibs = false;
 
 	// Open the file
-	ifstream file(filename.c_str(), ifstream::binary);
+	ifstream file(ConvertToNativeString(filename), ifstream::binary);
 
 	if(file.fail()) {
 		Error("failed to open file " + filename + " for reading.");
@@ -84,7 +90,7 @@ Compiler::Compiler(const string& romfile, unsigned int adr, unsigned int endadr)
 	file.seekg(0, ifstream::end);
 	filesize = file.tellg();
 	file.seekg(0);
-	filebuffer = new char[filesize];
+	filebuffer = new char[(unsigned int) filesize];
 	file.read(filebuffer, filesize);
 	file.close();
 
@@ -130,7 +136,7 @@ Compiler::~Compiler()
 void Compiler::WriteOutput()
 {
 	if(failed) return;
-	ofstream file(filename.c_str(), ofstream::binary);
+	ofstream file(ConvertToNativeString(filename), ofstream::binary);
 
 	if(file.fail()) {
 		Error("failed to open file " + filename + " for writing.");
@@ -165,7 +171,7 @@ Module* Compiler::LoadModule(const std::string &filename)
 	// instead of SetLibTable, we should use m->Include(othermodule).
 	//m->SetLibTable(libtable);
 	string name = m->GetName();
-	
+
 	if(GetModule(name) != NULL) {
 		Error("attempt to redefine module " + name + "; module names must be unique");
 		return NULL;
@@ -192,7 +198,7 @@ string Compiler::FindModule(const string& name, const string& filedir)
 {
 	// Complete paths aren't looked for in include directories
 	if (fs::path(name).is_absolute())
-		return fs::exists( name )? name : "";
+		return fs::exists( name ) ? name : "";
 
 	// First, try in the provided file directory.
 	fs::path base(filedir);
@@ -414,8 +420,8 @@ void Compiler::AssignModuleAddresses()
 		bool found = false;
 		for(i = sorted.begin(); i != sorted.end(); ++i)
 		{
-			unsigned int size = (*i)->GetCodeSize();		
-			if((base & 0xFFFF) + size <= 0x10000) 
+			unsigned int size = (*i)->GetCodeSize();
+			if((base & 0xFFFF) + size <= 0x10000)
 			{
 				// Check for overwriting maximum address
 				if((endadr > 0) && (base + size >= endadr))
@@ -471,7 +477,7 @@ void Compiler::OutputModules()
 			throw Exception(ss.str());
 		}
 
-		m->WriteCode(filebuffer, MapVirtualAddress(m->GetBaseAddress()), filesize);
+		m->WriteCode(filebuffer, MapVirtualAddress(m->GetBaseAddress()), (int) filesize);
 
 		if(printJumps && m->GetName().substr(0,3) != "std")
 			m->PrintJumps();
@@ -554,7 +560,7 @@ void Compiler::DoDelayedWrites()
 				<< romwrites[i]->GetVirtualAddress();
 			throw Exception(ss.str());
 		}
-		romwrites[i]->DoWrite(filebuffer, padr, filesize);
+		romwrites[i]->DoWrite(filebuffer, padr, (int) filesize);
 	}
 }
 
@@ -576,7 +582,7 @@ void Compiler::DoDelayedWrites()
  */
 void Compiler::WriteResetInfo(const std::string &filename)
 {
-	ofstream file(filename.c_str());
+	ofstream file(ConvertToNativeString(filename));
 
 	if(file.fail())
 		throw Exception("couldn't create info file '" + filename + "'");
@@ -621,7 +627,7 @@ void Compiler::WriteResetInfo(const std::string &filename)
 
 void Compiler::ApplyResetInfo(const std::string& filename)
 {
-	ifstream file(filename.c_str());
+	ifstream file(ConvertToNativeString(filename));
 
 	if(file.fail())
 		return;

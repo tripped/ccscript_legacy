@@ -80,7 +80,7 @@ private:
 	// File info
 	std::string filename;
 	char* filebuffer;
-	int filesize;
+	std::streamoff filesize;
 	int actual_start;
 	int actual_end;
 	int totalfrag;

@@ -166,7 +166,7 @@ void ByteChunk::Truncate(unsigned int newsize)
 	bytes.resize(newsize);
 
 	pos = bytes.size();
-	
+
 	cinfo.resize(newsize);
 }
 
@@ -253,7 +253,7 @@ void ByteChunk::TranslateReferences(ByteChunk& destination,
 		}
 	}
 
-	
+
 	for(vector<Reference>::const_iterator it = needed_refs.begin();
 		it != needed_refs.end(); ++it)
 	{
@@ -307,7 +307,7 @@ void ByteChunk::TranslateReferences(ByteChunk& destination,
 			// how many total bytes of the reference are left?
 			r.length = std::min(r.length, r.length - r.offset - overflow);
 		}
-		
+
 		// Add the reference
 		destination.AddReference(r.location + start - offset, r.offset, r.length, r.target);
 	}
@@ -442,7 +442,7 @@ unsigned char ByteChunk::ReadByte(unsigned int pos) const
 	try {
 		return bytes.at(pos);
 	}
-	catch(std::exception e) {}
+	catch(std::exception&) {}
 	return 0;
 }
 
@@ -453,7 +453,7 @@ unsigned short ByteChunk::ReadShort(unsigned int pos) const
 		result += bytes.at(pos);
 		result += bytes.at(pos+1) << 8;
 	}
-	catch(std::exception e) {
+	catch(std::exception&) {
 		// just give incomplete results on exception
 	}
 	return result;
@@ -468,7 +468,7 @@ unsigned int ByteChunk::ReadLong(unsigned int pos) const
 		result += bytes.at(pos+2) << 16;
 		result += bytes.at(pos+3) << 24;
 	}
-	catch(std::exception e) {
+	catch(std::exception&) {
 	}
 	return result;
 }
